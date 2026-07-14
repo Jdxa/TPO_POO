@@ -1,3 +1,6 @@
+"
+Clase Mascota con atributos significativos
+"
 Class {
 	#name : #Mascota,
 	#superclass : #Object,

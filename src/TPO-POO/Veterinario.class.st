@@ -1,3 +1,9 @@
+"
+Instance Variables
+	CUIL:		<Object>
+	colMatriculas:		<Object>
+	fechaNac:		<Object>
+"
 Class {
 	#name : #Veterinario,
 	#superclass : #Persona,

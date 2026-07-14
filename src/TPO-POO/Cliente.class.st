@@ -1,3 +1,9 @@
+"
+Instance Variables
+	colMascotas:		<Object>
+	email:		<Object>
+	telefono:		<Object>
+"
 Class {
 	#name : #Cliente,
 	#superclass : #Persona,
