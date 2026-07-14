@@ -10,38 +10,26 @@ Class {
 }
 
 { #category : #constructor }
-Cliente class >> crearClienteDNI: unDni nombre: unNombre apellido: unApellido [
+Cliente class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido domicilio: unDomicilio email: unEmail telefono: unTelefono colMascotas: unaColMascotas [
 
 	| unCliente |
 	unCliente := self new.
 	unCliente
-		iniciarClienteDNI: unDni
+		iniciarPersonaNroDoc: unNroDoc
 		nombre: unNombre
 		apellido: unApellido
-		cuenta: Cuenta new.
-	^ unCliente
+		domicilio: unDomicilio.
+	unCliente
+		iniciarEmail: unEmail
+		telefono: unTelefono
+		colMascotas: unaColMascotas.
+	
+^unCliente 
 ]
 
-{ #category : #accessing }
-Cliente >> apellido [
-
-	^ apellido
-]
-
-{ #category : #accessing }
-Cliente >> apellido: anObject [
-
-	apellido := anObject
-]
-
-{ #category : #accessing }
-Cliente >> nombre [
-
-	^ nombre
-]
-
-{ #category : #accessing }
-Cliente >> nombre: anObject [
-
-	nombre := anObject
+{ #category : #iniciador }
+Cliente >> iniciarEmail: unEmail telefono: unTelefono colMascotas: unaColMascotas [
+email := unEmail .
+telefono := unTelefono .
+colMascotas := unaColMascotas .
 ]
