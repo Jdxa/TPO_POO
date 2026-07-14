@@ -18,3 +18,20 @@ Class {
 	],
 	#category : #'TPO-POO'
 }
+
+{ #category : #constructor }
+Matricula class >> crearNumMat: unNumMat colegioEmisor: unColegio fechaInscripcion: unaFechaInscripcion fechaVigencia: unaFechaVigencia tipoAsociado: unTipo [
+|unaMatricula|
+unaMatricula := self new.
+unaMatricula iniciarNumMat: unNumMat colegioEmisor: unColegio fechaInscripcion: unaFechaInscripcion fechaVigencia: unaFechaVigencia tipoAsociado: unTipo .
+^unaMatricula . 
+]
+
+{ #category : #iniciar }
+Matricula >> iniciarNumMat: unNumMat colegioEmisor: unColegio fechaInscripcion: unaFechaInscripcion fechaVigencia: unaFechaVigencia tipoAsociado: unTipo [
+numMat := unNumMat .
+colegioEmisor := unColegio .
+fechaInscripcion := unaFechaInscripcion .
+fechaVigencia := unaFechaVigencia .
+tipoAsociado := unTipo .
+]
