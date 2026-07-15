@@ -1,3 +1,10 @@
+"
+Instance Variables
+	apellido:		<Object>
+	domicilio:		<Object>
+	nombre:		<Object>
+	nroDoc:		<Object>
+"
 Class {
 	#name : #Persona,
 	#superclass : #Object,
