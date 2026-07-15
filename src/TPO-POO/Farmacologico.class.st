@@ -10,9 +10,7 @@ Class {
 	#name : #Farmacologico,
 	#superclass : #Tratamiento,
 	#instVars : [
-		'nombreMonodroga',
-		'valorMonodroga',
-		'ventaLibre',
+		'monodroga',
 		'dosis',
 		'frecuencia'
 	],
@@ -20,19 +18,21 @@ Class {
 }
 
 { #category : #constructor }
-Farmacologico class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado nombreMonodroga: unNombreMonodroga valorMonodroga: unValorMonodroga ventaLibre: esVentaLibre dosis: unaDosis frecuencia: unaFrecuencia [
-|unTratamiento|
-unTratamiento := self new.
-unTratamiento iniciarFecha:  unaFecha motivo: unMotivo estado: unEstado.
-unTratamiento iniciarNombre: unNombreMonodroga  valorMonodroga: unValorMonodroga ventaLibre: esVentaLibre  dosis: unaDosis frecuencia: unaFrecuencia.
-^unTratamiento 
+Farmacologico class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado monodroga: unaMonodroga dosis: unaDosis frecuencia: unaFrecuencia [
+
+	| unTratamiento |
+	unTratamiento := self new.
+	unTratamiento
+		iniciarFecha: unaFecha
+		motivo: unMotivo
+		estado: unEstado.
+	unTratamiento iniciarMonodroga: unaMonodroga dosis: unaDosis frecuencia: unaFrecuencia.
+	^ unTratamiento
 ]
 
 { #category : #iniciador }
-Farmacologico >> iniciarNombre: unNombreMonodroga valorMonodroga: unValorMonodroga ventaLibre: esVentaLibre dosis: unaDosis frecuencia: unaFrecuencia [
-nombreMonodroga := unNombreMonodroga .
-valorMonodroga := unValorMonodroga .
-ventaLibre := esVentaLibre .
-dosis := unaDosis .
-frecuencia := unaFrecuencia  
+Farmacologico >> iniciarMonodroga: unaMonodroga dosis: unaDosis frecuencia: unaFrecuencia [
+	monodroga := unaMonodroga.
+	dosis := unaDosis.
+	frecuencia := unaFrecuencia 
 ]
