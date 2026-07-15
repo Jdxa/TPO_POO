@@ -20,7 +20,7 @@ Class {
 }
 
 { #category : #constructor }
-Diagnostico class >> crearFechaDiagnostico: unaFecha descripcion: unaDescripcion medico: unMedico mascota: unaMascota colTratamiento: unaColTratamiento [
+Diagnostico class >> crearFecha: unaFecha descripcion: unaDescripcion medico: unMedico mascota: unaMascota colTratamiento: unaColTratamiento [
 
 	| unDiagnostico |
 	unDiagnostico := self new.
@@ -28,17 +28,16 @@ Diagnostico class >> crearFechaDiagnostico: unaFecha descripcion: unaDescripcion
 		iniciarFechaDiagnostico: unaFecha
 		descripcion: unaDescripcion
 		medico: unMedico
-		mascota: unaMascota
-		colTratamiento: unaColTratamiento.
+		mascota: unaMascota.
 	^ unDiagnostico
 ]
 
 { #category : #iniciador }
-Diagnostico >> iniciarFechaDiagnostico: unaFecha descripcion: unaDescripcion medico: unMedico mascota: unaMascota colTratamiento: unaColTratamiento [
+Diagnostico >> iniciarFechaDiagnostico: unaFecha descripcion: unaDescripcion medico: unMedico mascota: unaMascota [
 
-fechaDiagnostico := unaFecha .
-descripcion := unaDescripcion .
-medico := unMedico .
-mascota := unaMascota .
-colTratamiento := unaColTratamiento .
+	fechaDiagnostico := unaFecha.
+	descripcion := unaDescripcion.
+	medico := unMedico.
+	mascota := unaMascota.
+	colTratamiento := OrderedCollection new.
 ]

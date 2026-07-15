@@ -16,7 +16,7 @@ Class {
 }
 
 { #category : #constructor }
-Cliente class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido domicilio: unDomicilio email: unEmail telefono: unTelefono colMascotas: unaColMascotas [
+Cliente class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido domicilio: unDomicilio email: unEmail telefono: unTelefono [
 
 	| unCliente |
 	unCliente := self new.
@@ -27,15 +27,20 @@ Cliente class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido dom
 		domicilio: unDomicilio.
 	unCliente
 		iniciarEmail: unEmail
-		telefono: unTelefono
-		colMascotas: unaColMascotas.
-	
-^unCliente 
+		telefono: unTelefono.
+
+	^ unCliente
 ]
 
 { #category : #iniciador }
-Cliente >> iniciarEmail: unEmail telefono: unTelefono colMascotas: unaColMascotas [
-email := unEmail .
-telefono := unTelefono .
-colMascotas := unaColMascotas .
+Cliente >> añadirMascota: unaMascota [
+	colMascotas add: unaMascota.
+]
+
+{ #category : #iniciador }
+Cliente >> iniciarEmail: unEmail telefono: unTelefono [
+
+	email := unEmail.
+	telefono := unTelefono.
+	colMascotas := OrderedCollection new.
 ]

@@ -16,17 +16,30 @@ Class {
 }
 
 { #category : #constructor }
-Veterinario class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido domicilio: unDomicilio fechaNac: unaFechaNac CUIL: unCUIL colMatriculas: unaColMatriculas [
-|unVeterinario|
-unVeterinario := self new.
-unVeterinario iniciarPersonaNroDoc: unNroDoc nombre: unNombre apellido: unApellido domicilio: unDomicilio .
-unVeterinario iniciarFechaNac:  unaFechaNac CUIL: unCUIL colMatriculas: unaColMatriculas .
-^unVeterinario 
+Veterinario class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido domicilio: unDomicilio fechaNac: unaFechaNac CUIL: unCUIL [ 
+
+	| unVeterinario |
+	unVeterinario := self new.
+	unVeterinario
+		iniciarPersonaNroDoc: unNroDoc
+		nombre: unNombre
+		apellido: unApellido
+		domicilio: unDomicilio.
+	unVeterinario
+		iniciarFechaNac: unaFechaNac
+		CUIL: unCUIL.
+	^ unVeterinario
 ]
 
 { #category : #iniciador }
-Veterinario >> iniciarFechaNac: unaFechaNac CUIL: unCUIL colMatriculas: unaColMatriculas [
-fechaNac := unaFechaNac .
-CUIL := unCUIL .
-colMatriculas := unaColMatriculas .
+Veterinario >> añadirMatricula: unaMatricula [
+	colMatriculas add: unaMatricula .
+]
+
+{ #category : #iniciador }
+Veterinario >> iniciarFechaNac: unaFechaNac CUIL: unCUIL [
+
+	fechaNac := unaFechaNac.
+	CUIL := unCUIL.
+	colMatriculas := OrderedCollection new.
 ]
