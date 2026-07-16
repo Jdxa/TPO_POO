@@ -33,8 +33,9 @@ Cliente class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido dom
 ]
 
 { #category : #iniciador }
-Cliente >> añadirMascota: unaMascota [
-	colMascotas add: unaMascota.
+Cliente >> agregarMascota: unaMascota [
+
+	colMascotas add: unaMascota
 ]
 
 { #category : #iniciador }
