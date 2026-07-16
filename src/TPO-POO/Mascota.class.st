@@ -30,6 +30,11 @@ Mascota class >> crearNombre: unNombre especie: unaEspecie raza: unaRaza fechaNa
 ]
 
 { #category : #iniciador }
+Mascota >> agregarDiagnostico: unDiagnostico [
+	colDiagnostico add: unDiagnostico.
+]
+
+{ #category : #iniciador }
 Mascota >> iniciarNombre: unNombreMascota especie: unaEspecie raza: unaRaza fechaNac: unaFechaNac peso: unPeso [ 
 
 	nombreMascota := unNombreMascota.
