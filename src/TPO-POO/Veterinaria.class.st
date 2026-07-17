@@ -33,6 +33,16 @@ unaVeterinaria iniciarCuit: unCuit .
 ^unaVeterinaria 
 ]
 
+{ #category : #visualizer }
+Veterinaria >> buscarCliente: unNombreMascota [
+
+	| unCliente |
+	unCliente := colCliente detect: [ :cliente |
+		             cliente buscarMascota: unNombreMascota ].
+	unCliente := unCliente  getNombreCliente.
+	^unCliente
+]
+
 { #category : #iniciador }
 Veterinaria >> iniciarCuit: unCuit [
 cuit := unCuit.

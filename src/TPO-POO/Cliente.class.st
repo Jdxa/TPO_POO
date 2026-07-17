@@ -38,6 +38,18 @@ Cliente >> agregarMascota: unaMascota [
 	colMascotas add: unaMascota
 ]
 
+{ #category : #visualizer }
+Cliente >> buscarMascota: nombreMascota [
+	^ colMascotas includes: [ :mascota| mascota mismoNombre: nombreMascota ].
+	
+	
+]
+
+{ #category : #visualizer }
+Cliente >> getNombreCliente [
+	^nombre
+]
+
 { #category : #iniciador }
 Cliente >> iniciarEmail: unEmail telefono: unTelefono [
 
