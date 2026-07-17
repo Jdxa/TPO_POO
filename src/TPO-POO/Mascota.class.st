@@ -44,9 +44,3 @@ Mascota >> iniciarNombre: unNombreMascota especie: unaEspecie raza: unaRaza fech
 	peso := unPeso.
 	colDiagnostico := OrderedCollection new.
 ]
-
-{ #category : #comparition }
-Mascota >> mismoNombre: unNombre [
-	^ unNombre = nombreMascota
-	
-]

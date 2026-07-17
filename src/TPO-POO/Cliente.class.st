@@ -39,10 +39,8 @@ Cliente >> agregarMascota: unaMascota [
 ]
 
 { #category : #visualizer }
-Cliente >> buscarMascota: nombreMascota [
-	^ colMascotas includes: [ :mascota| mascota mismoNombre: nombreMascota ].
-	
-	
+Cliente >> buscarMascota: unaMascota [
+	^ colMascotas includes: unaMascota.
 ]
 
 { #category : #visualizer }
