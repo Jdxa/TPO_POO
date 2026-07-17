@@ -32,8 +32,9 @@ Veterinario class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido
 ]
 
 { #category : #iniciador }
-Veterinario >> añadirMatricula: unaMatricula [
-	colMatriculas add: unaMatricula .
+Veterinario >> agregarMatricula: unaMatricula [
+
+	colMatriculas add: unaMatricula
 ]
 
 { #category : #iniciador }

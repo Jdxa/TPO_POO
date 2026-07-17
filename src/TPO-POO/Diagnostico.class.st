@@ -33,6 +33,11 @@ Diagnostico class >> crearFecha: unaFecha descripcion: unaDescripcion medico: un
 ]
 
 { #category : #iniciador }
+Diagnostico >> agregarTratamiento: unTratamiento [
+	colTratamiento add: unTratamiento.
+]
+
+{ #category : #iniciador }
 Diagnostico >> iniciarFechaDiagnostico: unaFecha descripcion: unaDescripcion medico: unMedico mascota: unaMascota [
 
 	fechaDiagnostico := unaFecha.

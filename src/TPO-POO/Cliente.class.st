@@ -33,8 +33,19 @@ Cliente class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido dom
 ]
 
 { #category : #iniciador }
-Cliente >> añadirMascota: unaMascota [
-	colMascotas add: unaMascota.
+Cliente >> agregarMascota: unaMascota [
+
+	colMascotas add: unaMascota
+]
+
+{ #category : #visualizer }
+Cliente >> buscarMascota: unaMascota [
+	^ colMascotas includes: unaMascota.
+]
+
+{ #category : #visualizer }
+Cliente >> getNombreCliente [
+	^nombre
 ]
 
 { #category : #iniciador }
