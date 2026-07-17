@@ -29,10 +29,9 @@ Quirurgico >> esValido [
 
 	| exito |
 	exito := super esValido.
-	[ exito ] ifTrue: [
-		[ nivelRiesgo = 2 ] ifTrue: [
-			[ tipoAnestesia = 'General' ] ifFalse: [ exito := false ] ] ].
-	^ exito
+	exito ifTrue: [
+		nivelRiesgo = 2 ifTrue: [ exito := tipoAnestesia = 'General' ] ].
+	^exito 
 ]
 
 { #category : #iniciador }
