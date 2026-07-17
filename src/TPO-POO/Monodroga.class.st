@@ -25,6 +25,11 @@ unaMonodroga iniciarNombre: unNombreMonodroga valorMono: unValorMono ventaLibre:
 ^unaMonodroga 
 ]
 
+{ #category : #comparacion }
+Monodroga >> esVentaLibre [
+  ^ ventaLibre
+]
+
 { #category : #iniciador }
 Monodroga >> iniciarNombre: unNombreMonodroga valorMono: unValor ventaLibre: esVentaLibre stock: unStock [
 nombreMono := unNombreMonodroga.

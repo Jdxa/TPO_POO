@@ -30,6 +30,15 @@ Farmacologico class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado mo
 	^ unTratamiento
 ]
 
+{ #category : #comparacion }
+Farmacologico >> esValido [
+
+	| exito |
+	exito := monodroga esVentaLibre.
+	[ exito ] ifFalse: [ exito := super esValido ].
+	^ exito
+]
+
 { #category : #iniciador }
 Farmacologico >> iniciarMonodroga: unaMonodroga dosis: unaDosis frecuencia: unaFrecuencia [
 	monodroga := unaMonodroga.

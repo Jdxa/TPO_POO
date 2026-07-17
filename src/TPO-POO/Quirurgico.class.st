@@ -24,6 +24,17 @@ unTratamiento iniciarNombre: unNombreProcedimiento  nivelRiesgo: unNivelRiesgo  
 ^unTratamiento 
 ]
 
+{ #category : #comparacion }
+Quirurgico >> esValido [
+
+	| exito |
+	exito := super esValido.
+	[ exito ] ifTrue: [
+		[ nivelRiesgo = 2 ] ifTrue: [
+			[ tipoAnestesia = 'General' ] ifFalse: [ exito := false ] ] ].
+	^ exito
+]
+
 { #category : #iniciador }
 Quirurgico >> iniciarNombre: unNombreProcedimiento nivelRiesgo: unNivelRiesgo tipoAnestesia: unTipoAnestesia [
 nombreProcedimiento := unNombreProcedimiento .

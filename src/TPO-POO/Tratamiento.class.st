@@ -31,6 +31,12 @@ Tratamiento class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado [
 	^ unTratamiento
 ]
 
+{ #category : #comparacion }
+Tratamiento >> esValido [
+
+	^ fecha dayOfWeek between: 2 and: 6
+]
+
 { #category : #iniciador }
 Tratamiento >> iniciarFecha: unaFecha motivo: unMotivo estado: unEstado [
 	fecha := unaFecha .
