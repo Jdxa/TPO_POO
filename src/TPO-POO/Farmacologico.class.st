@@ -35,7 +35,8 @@ Farmacologico >> esValido [
 
 	| exito |
 	exito := monodroga esVentaLibre.
-	[ exito ] ifFalse: [ exito := super esValido ].
+	exito ifFalse: [ super esValido ifTrue: [ exito := true ]  ].
+	
 	^ exito
 ]
 
