@@ -56,11 +56,14 @@ Factura >> iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico mon
 
 { #category : #iniciador }
 Factura >> registrarPago: unPago [
-	|pagada|
+	"agregar estado en factura para cambiar el estado de la factura si esta pagada"
+	| pagada |
 	pagada := self estaPagada.
-	
-	pagada ifTrue: [ ^self ]
-	ifFalse: [colPagos add: unPago.
-		pagada := self estaPagada ].
-	^pagada 
+
+	pagada
+		ifTrue: [ ^ self ]
+		ifFalse: [
+			colPagos add: unPago.
+			pagada := self estaPagada ].
+	^ pagada
 ]
