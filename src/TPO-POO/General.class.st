@@ -9,13 +9,24 @@ Class {
 
 { #category : #constructor }
 General class >> crearAne [
-|unaAnestesia|
-unaAnestesia := self new.
-costo := 100000.
-^unaAnestesia 
+
+	| unaAnestesia |
+	unaAnestesia := self new.
+	unaAnestesia iniciarCosto.
+	^ unaAnestesia
+]
+
+{ #category : #accesing }
+General >> costo [
+^costo
 ]
 
 { #category : #propio }
 General >> esGeneral [ 
  ^ true
+]
+
+{ #category : #iniciar }
+General >> iniciarCosto [
+	costo := 100000.
 ]

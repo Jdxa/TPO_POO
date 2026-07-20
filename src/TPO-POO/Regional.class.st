@@ -12,12 +12,24 @@ Regional class >> crearAne [
 
 	| unaAnestesia |
 	unaAnestesia := self new.
-	costo := 60000.
+unaAnestesia iniciarCosto.
 	^ unaAnestesia
+]
+
+{ #category : #accesing }
+Regional >> costo [
+
+	^ costo
 ]
 
 { #category : #propio }
 Regional >> esGeneral [
 
 	^ false
+]
+
+{ #category : #iniciar }
+Regional >> iniciarCosto [
+
+	costo := 60000
 ]

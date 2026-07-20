@@ -12,12 +12,24 @@ Local class >> crearAne [
 
 	| unaAnestesia |
 	unaAnestesia := self new.
-	costo := 30000.
+unaAnestesia iniciarCosto.
 	^ unaAnestesia
+]
+
+{ #category : #accesing }
+Local >> costo [
+
+	^ costo
 ]
 
 { #category : #propio }
 Local >> esGeneral [
 
 	^ false
+]
+
+{ #category : #iniciar }
+Local >> iniciarCosto [
+
+	costo := 30000
 ]

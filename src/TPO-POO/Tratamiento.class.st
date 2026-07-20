@@ -27,7 +27,6 @@ Tratamiento class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado [
 		iniciarFecha: unaFecha
 		motivo: unMotivo
 		estado: unEstado.
-	costoBase := 5000.
 	^ unTratamiento
 ]
 
@@ -39,7 +38,9 @@ Tratamiento >> esValido [
 
 { #category : #iniciador }
 Tratamiento >> iniciarFecha: unaFecha motivo: unMotivo estado: unEstado [
-	fecha := unaFecha .
-	motivo := unMotivo .
-	estado := unEstado  
+
+	fecha := unaFecha.
+	motivo := unMotivo.
+	estado := unEstado.
+	costoBase := 5000.
 ]

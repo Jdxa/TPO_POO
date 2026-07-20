@@ -26,9 +26,13 @@ unTratamiento iniciarNombre: unNombreProcedimiento  nivelRiesgo: unNivelRiesgo  
 
 { #category : #propio }
 Quirurgico >> costoTot [
-	|unCostoTotal|
-	unCostoTotal := (costoBase + (anestesia costo )) * ( 1 + (nivelRiesgo /10)).
-	^unCostoTotal 	
+
+	| unCostoTotal costoAnestesia|
+	costoAnestesia := anestesia costo.
+	unCostoTotal := costoBase + costoAnestesia.
+	unCostoTotal := unCostoTotal * (1 + (nivelRiesgo/10)).
+	                
+	^ unCostoTotal
 ]
 
 { #category : #comparacion }
