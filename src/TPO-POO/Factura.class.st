@@ -29,9 +29,14 @@ unaFactura iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico mon
 ^unaFactura  
 ]
 
-{ #category : #iniciador }
-Factura >> agregarPago: unPago [
-	colPagos add: unPago.
+{ #category : #propio }
+Factura >> estaPagada [
+
+	| montoPagado pagada |
+	montoPagado := 0.
+	colPagos do: [ :pago | montoPagado := montoPagado + pago montoPago ].
+	pagada := montoPagado >= montoTotal.
+	^ pagada
 ]
 
 { #category : #accessing }
@@ -47,4 +52,15 @@ Factura >> iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico mon
 	montoTotal := unMontoTotal.
 	fechaGen := unaFechaGen.
 	colPagos := OrderedCollection new
+]
+
+{ #category : #iniciador }
+Factura >> registrarPago: unPago [
+	|pagada|
+	pagada := self estaPagada.
+	
+	pagada ifTrue: [ ^self ]
+	ifFalse: [colPagos add: unPago.
+		pagada := self estaPagada ].
+	^pagada 
 ]
