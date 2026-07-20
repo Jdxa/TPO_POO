@@ -34,6 +34,11 @@ Factura >> agregarPago: unPago [
 	colPagos add: unPago.
 ]
 
+{ #category : #accessing }
+Factura >> getDiagnostico [
+ ^ diagnostico 
+]
+
 { #category : #iniciador }
 Factura >> iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen [ 
 	cliente := unCliente.

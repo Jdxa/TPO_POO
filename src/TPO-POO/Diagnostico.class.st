@@ -45,6 +45,11 @@ Diagnostico >> calcularCosto [
 	^costoTot
 ]
 
+{ #category : #propio }
+Diagnostico >> getMascota [
+^mascota 
+]
+
 { #category : #iniciador }
 Diagnostico >> iniciarFechaDiagnostico: unaFecha descripcion: unaDescripcion medico: unMedico mascota: unaMascota [
 
