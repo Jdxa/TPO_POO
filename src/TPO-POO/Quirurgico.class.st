@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'nombreProcedimiento',
 		'nivelRiesgo',
-		'anestesia'
+		'tipoAnestesia'
 	],
 	#category : #'TPO-POO'
 }
@@ -27,11 +27,12 @@ unTratamiento iniciarNombre: unNombreProcedimiento  nivelRiesgo: unNivelRiesgo  
 { #category : #propio }
 Quirurgico >> costoTot [
 
-	| unCostoTotal costoAnestesia|
-	costoAnestesia := anestesia costo.
-	unCostoTotal := costoBase + costoAnestesia.
-	unCostoTotal := unCostoTotal * (1 + (nivelRiesgo/10)).
-	                
+	| unCostoTotal |
+	unCostoTotal := super costoTot.
+	tipoAnestesia = 'Local' ifTrue: [ unCostoTotal := unCostoTotal + 30000 ].
+	tipoAnestesia = 'Regional' ifTrue: [ unCostoTotal := unCostoTotal + 60000 ].
+	tipoAnestesia = 'General' ifTrue: [ unCostoTotal := unCostoTotal + 100000 ].
+	unCostoTotal := unCostoTotal * (1 +(nivelRiesgo /10 )).
 	^ unCostoTotal
 ]
 
@@ -41,7 +42,7 @@ Quirurgico >> esValido [
 	| exito |
 	exito := super esValido.
 	exito ifTrue: [
-		nivelRiesgo = 2 ifTrue: [ exito := anestesia esGeneral ] ].
+		nivelRiesgo = 2 ifTrue: [ exito := tipoAnestesia = 'General' ] ].
 	^ exito
 ]
 
@@ -50,5 +51,5 @@ Quirurgico >> iniciarNombre: unNombreProcedimiento nivelRiesgo: unNivelRiesgo ti
 
 	nombreProcedimiento := unNombreProcedimiento.
 	nivelRiesgo := unNivelRiesgo.
-	anestesia := unTipoAnestesia 
+	tipoAnestesia := unTipoAnestesia
 ]

@@ -32,10 +32,11 @@ Farmacologico class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado mo
 
 { #category : #propio }
 Farmacologico >> costoTot [
-|costoTotal|  
-costoTotal := costoBase + (dosis * (monodroga valorMono)).
-costoTotal >= 40000 ifTrue: [ costoTotal * (0.9) ].
-^costoTotal 
+
+	| costoTotal |
+	costoTotal := (super costoTot ) + (dosis * monodroga valorMono).
+	costoTotal >= 40000 ifTrue: [ costoTotal * 0.9 ].
+	^ costoTotal
 ]
 
 { #category : #comparacion }
