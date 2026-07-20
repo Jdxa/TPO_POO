@@ -1,3 +1,6 @@
+"
+TIENE COSTO
+"
 Class {
 	#name : #General,
 	#superclass : #Anestesia,
