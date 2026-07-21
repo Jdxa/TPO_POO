@@ -59,7 +59,8 @@ Veterinaria >> generarFactura: unDiagnostico [
 				              cuit: cuit
 				              diagnostico: unDiagnostico
 				              montoTotal: montoTotal
-				              fechaGen: Date today.
+				              fechaGen: Date today
+										estadoPagado: false.
 			colFacturas add: unaFactura ]
 ]
 

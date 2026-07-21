@@ -16,27 +16,29 @@ Class {
 		'diagnostico',
 		'montoTotal',
 		'fechaGen',
-		'colPagos'
+		'colPagos',
+		'estadoPagado'
 	],
 	#category : #'TPO-POO'
 }
 
 { #category : #constructor }
-Factura class >> crearCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen [
-|unaFactura|
-unaFactura := self new.
-unaFactura iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen.
-^unaFactura  
+Factura class >> crearCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen estadoPagado: estado [
+
+	| unaFactura |
+	unaFactura := self new.
+	unaFactura iniciarCliente: unCliente
+		cuit: unCuit
+		diagnostico: unDiagnostico
+		montoTotal: unMontoTotal
+		fechaGen: unaFechaGen
+		estadoPagado: estado.
+	^ unaFactura
 ]
 
 { #category : #propio }
 Factura >> estaPagada [
-
-	| montoPagado pagada |
-	montoPagado := 0.
-	colPagos do: [ :pago | montoPagado := montoPagado + pago montoPago ].
-	pagada := montoPagado >= montoTotal.
-	^ pagada
+	^ estadoPagado
 ]
 
 { #category : #accessing }
@@ -55,15 +57,25 @@ Factura >> iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico mon
 ]
 
 { #category : #iniciador }
+Factura >> iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen estadoPagado: estado [
+
+	cliente := unCliente.
+	cuit := unCuit.
+	diagnostico := unDiagnostico.
+	montoTotal := unMontoTotal.
+	fechaGen := unaFechaGen.
+	estadoPagado := estado.
+	colPagos := OrderedCollection new
+]
+
+{ #category : #iniciador }
 Factura >> registrarPago: unPago [
 	"agregar estado en factura para cambiar el estado de la factura si esta pagada"
-	| pagada |
-	pagada := self estaPagada.
 
-	pagada
-		ifTrue: [ ^ self ]
-		ifFalse: [
-			colPagos add: unPago.
-			pagada := self estaPagada ].
-	^ pagada
+	| pagoAcumulado |
+	estadoPagado ifTrue: [^self]ifFalse: [
+		pagoAcumulado := 0.
+		pagoAcumulado := colPagos do: [ :pago |
+			                 pagoAcumulado := pagoAcumulado + pago montoPago ].
+		estadoPagado := pagoAcumulado >= montoTotal ]
 ]
