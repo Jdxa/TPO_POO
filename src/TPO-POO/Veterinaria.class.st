@@ -33,6 +33,12 @@ unaVeterinaria iniciarCuit: unCuit .
 ^unaVeterinaria 
 ]
 
+{ #category : #propio }
+Veterinaria >> agregarFactura: unaFactura [
+colFacturas add: unaFactura.
+
+]
+
 { #category : #visualizer }
 Veterinaria >> buscarCliente: unaMascota [
 
@@ -41,6 +47,18 @@ Veterinaria >> buscarCliente: unaMascota [
 		             cliente buscarMascota: unaMascota ].
 
 	^ unCliente
+]
+
+{ #category : #propio }
+Veterinaria >> facturasPendientes [
+
+	| pendientes |
+	pendientes := colFacturas reject: [ :factura | factura estaPagada ].
+	pendientes := pendientes collect: [ :factura |
+		              {
+			              factura cliente.
+			              factura pagoPendiente } ].
+	^pendientes 	
 ]
 
 { #category : #propio }
