@@ -82,6 +82,13 @@ Veterinaria >> generarFactura: unDiagnostico [
 			colFacturas add: unaFactura ]
 ]
 
+{ #category : #propio }
+Veterinaria >> generarListadoFaltantes [
+|listaFaltantes|
+listaFaltantes := colMonodrogas reject: [ :monodroga | monodroga tieneStock ].
+^listaFaltantes  
+]
+
 { #category : #iniciador }
 Veterinaria >> iniciarCuit: unCuit [
 cuit := unCuit.

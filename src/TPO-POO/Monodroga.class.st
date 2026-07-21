@@ -39,6 +39,16 @@ stock := unStock.
 ]
 
 { #category : #accesors }
+Monodroga >> stock [
+^stock
+]
+
+{ #category : #accesors }
+Monodroga >> tieneStock [
+ ^ stock > 0.
+]
+
+{ #category : #accesors }
 Monodroga >> valorMono [
 ^valorMono 
 ]
