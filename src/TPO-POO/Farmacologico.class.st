@@ -40,12 +40,12 @@ Farmacologico >> costoTot [
 ]
 
 { #category : #comparacion }
-Farmacologico >> esValido [
+Farmacologico >> esTratValido [
 
 	| exito |
 	exito := monodroga esVentaLibre.
-	exito ifFalse: [ super esValido ifTrue: [ exito := true ]  ].
-	
+	exito ifFalse: [ super esTratValido ifTrue: [ exito := true ] ].
+
 	^ exito
 ]
 

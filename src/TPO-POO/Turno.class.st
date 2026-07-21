@@ -31,6 +31,16 @@ unTurno iniciarFecha: unaFecha hora: unaHora estado: unEstado motivo: unMotivo c
 ^unTurno 
 ]
 
+{ #category : #propio }
+Turno >> fecha [ 
+^fecha 
+]
+
+{ #category : #propio }
+Turno >> hora [
+^hora 
+]
+
 { #category : #iniciador }
 Turno >> iniciarFecha: unaFecha hora: unaHora estado: unEstado motivo: unMotivo cliente: unCliente veterinario: unVeterinario mascota: unaMascota [
 
@@ -41,4 +51,9 @@ motivo := unMotivo .
 cliente := unCliente.
 veterinario := unVeterinario .
 mascota := unaMascota 
+]
+
+{ #category : #propio }
+Turno >> veterinario [
+^veterinario 
 ]

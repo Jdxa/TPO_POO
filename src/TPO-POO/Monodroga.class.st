@@ -45,7 +45,8 @@ Monodroga >> stock [
 
 { #category : #accesors }
 Monodroga >> tieneStock [
- ^ stock > 0.
+
+	^ stock > 1
 ]
 
 { #category : #accesors }

@@ -37,10 +37,10 @@ Quirurgico >> costoTot [
 ]
 
 { #category : #comparacion }
-Quirurgico >> esValido [
+Quirurgico >> esTratValido [
 
 	| exito |
-	exito := super esValido.
+	exito := super esTratValido.
 	exito ifTrue: [
 		nivelRiesgo = 2 ifTrue: [ exito := tipoAnestesia = 'General' ] ].
 	^ exito

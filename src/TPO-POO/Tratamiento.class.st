@@ -35,7 +35,7 @@ unCostoTotal := 5000.
 ]
 
 { #category : #comparacion }
-Tratamiento >> esValido [
+Tratamiento >> esTratValido [
 
 	^ fecha dayOfWeek between: 2 and: 6
 ]

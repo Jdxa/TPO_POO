@@ -34,6 +34,16 @@ unaVeterinaria iniciarCuit: unCuit .
 ]
 
 { #category : #propio }
+Veterinaria >> agendarTurno: unTurno [
+	|turnosFecha turnosVeterinario sePuede|
+	turnosFecha := colTurnos select: [ unTurno hora and: unTurno fecha].
+	turnosVeterinario := turnosFecha select: [ unTurno veterinario ].
+	sePuede := turnosFecha isEmpty.
+	sePuede ifFalse: [ ^sePuede  ] ifTrue: [ colTurnos add: unTurno ]
+	
+]
+
+{ #category : #propio }
 Veterinaria >> agregarFactura: unaFactura [
 colFacturas add: unaFactura.
 
