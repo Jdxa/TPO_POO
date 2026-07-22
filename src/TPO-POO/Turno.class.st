@@ -32,6 +32,23 @@ unTurno iniciarFecha: unaFecha hora: unaHora estado: unEstado motivo: unMotivo c
 ]
 
 { #category : #propio }
+Turno >> esCancelado [
+^ estado = 'Cancelado'
+]
+
+{ #category : #propio }
+Turno >> esTurnValido: unaColTurnos [
+
+	| colValido exito |
+	exito := false.
+	colValido := unaColTurnos select: [ :turno |
+		             (turno mismoVet: veterinario) and: [
+			             (turno mismoDia: fecha) and: [ turno mismaHora: hora ] ] ].
+	exito := colValido isEmpty.
+	^exito 
+]
+
+{ #category : #propio }
 Turno >> fecha [ 
 ^fecha 
 ]
@@ -51,6 +68,26 @@ motivo := unMotivo .
 cliente := unCliente.
 veterinario := unVeterinario .
 mascota := unaMascota 
+]
+
+{ #category : #propio }
+Turno >> mismaHora: unaHora [
+	^ hora = unaHora.
+]
+
+{ #category : #propio }
+Turno >> mismoCliente: unCliente [
+^cliente = unCliente 
+]
+
+{ #category : #propio }
+Turno >> mismoDia: unDia [
+ ^ fecha = unDia.
+]
+
+{ #category : #propio }
+Turno >> mismoVet: unVeterinario [
+  ^veterinario = unVeterinario.
 ]
 
 { #category : #propio }
