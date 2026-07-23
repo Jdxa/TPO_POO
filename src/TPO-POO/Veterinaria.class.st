@@ -35,8 +35,12 @@ unaVeterinaria iniciarCuit: unCuit .
 
 { #category : #propio }
 Veterinaria >> agendarTurno: unTurno [
-	"falta terminar"
-	unTurno esTurnValido: colTurnos
+
+
+	| exito |
+	exito := unTurno verificarTurno: colTurnos.
+	exito ifTrue: [ colTurnos add: unTurno ].
+	^ exito
 ]
 
 { #category : #propio }
