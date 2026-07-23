@@ -19,7 +19,30 @@ unTurno iniciarTrat: unTratamiento.
 ^unTurno 
 ]
 
+{ #category : #propio }
+TurnoTratamiento >> hace10Dias [
+
+	^ fecha subtractDays: 10.
+]
+
 { #category : #iniciador }
 TurnoTratamiento >> iniciarTrat: unTratamiento [
 tratamiento := unTratamiento .
+]
+
+{ #category : #propio }
+TurnoTratamiento >> verificarAusencias: colSuple [
+
+	|limiteInferior exito|
+	limiteInferior := fecha hace10Dias.
+	exito := colSuple anySatisfy: [ :unTurno | unTurno fecha between: limiteInferior  and: fecha ].
+	^exito 
+]
+
+{ #category : #propio }
+TurnoTratamiento >> verificarTurno: colTurno [
+	|exito|
+	exito := super verificarTurno: colTurno.
+	exito ifTrue: [ exito := tratamiento esTratValido ].
+	^exito
 ]

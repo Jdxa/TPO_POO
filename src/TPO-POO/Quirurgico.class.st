@@ -24,19 +24,32 @@ unTratamiento iniciarNombre: unNombreProcedimiento  nivelRiesgo: unNivelRiesgo  
 ^unTratamiento 
 ]
 
+{ #category : #propio }
+Quirurgico >> costoTot [
+
+	| unCostoTotal |
+	unCostoTotal := super costoTot.
+	tipoAnestesia = 'Local' ifTrue: [ unCostoTotal := unCostoTotal + 30000 ].
+	tipoAnestesia = 'Regional' ifTrue: [ unCostoTotal := unCostoTotal + 60000 ].
+	tipoAnestesia = 'General' ifTrue: [ unCostoTotal := unCostoTotal + 100000 ].
+	unCostoTotal := unCostoTotal * (1 +(nivelRiesgo /10 )).
+	^ unCostoTotal
+]
+
 { #category : #comparacion }
-Quirurgico >> esValido [
+Quirurgico >> esTratValido [
 
 	| exito |
-	exito := super esValido.
+	exito := super esTratValido.
 	exito ifTrue: [
 		nivelRiesgo = 2 ifTrue: [ exito := tipoAnestesia = 'General' ] ].
-	^exito 
+	^ exito
 ]
 
 { #category : #iniciador }
 Quirurgico >> iniciarNombre: unNombreProcedimiento nivelRiesgo: unNivelRiesgo tipoAnestesia: unTipoAnestesia [
-nombreProcedimiento := unNombreProcedimiento .
-nivelRiesgo := unNivelRiesgo .
-tipoAnestesia := unTipoAnestesia 
+
+	nombreProcedimiento := unNombreProcedimiento.
+	nivelRiesgo := unNivelRiesgo.
+	tipoAnestesia := unTipoAnestesia
 ]

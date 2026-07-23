@@ -16,22 +16,40 @@ Class {
 		'diagnostico',
 		'montoTotal',
 		'fechaGen',
-		'colPagos'
+		'colPagos',
+		'estadoPagado'
 	],
 	#category : #'TPO-POO'
 }
 
 { #category : #constructor }
-Factura class >> crearCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen [
-|unaFactura|
-unaFactura := self new.
-unaFactura iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen.
-^unaFactura  
+Factura class >> crearCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen estadoPagado: estado [
+
+	| unaFactura |
+	unaFactura := self new.
+	unaFactura iniciarCliente: unCliente
+		cuit: unCuit
+		diagnostico: unDiagnostico
+		montoTotal: unMontoTotal
+		fechaGen: unaFechaGen
+		estadoPagado: estado.
+	^ unaFactura
 ]
 
-{ #category : #iniciador }
-Factura >> agregarPago: unPago [
-	colPagos add: unPago.
+{ #category : #accessing }
+Factura >> cliente [
+
+	^ cliente
+]
+
+{ #category : #propio }
+Factura >> estaPagada [
+	^ estadoPagado
+]
+
+{ #category : #accessing }
+Factura >> getDiagnostico [
+ ^ diagnostico 
 ]
 
 { #category : #iniciador }
@@ -42,4 +60,50 @@ Factura >> iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico mon
 	montoTotal := unMontoTotal.
 	fechaGen := unaFechaGen.
 	colPagos := OrderedCollection new
+]
+
+{ #category : #iniciador }
+Factura >> iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico montoTotal: unMontoTotal fechaGen: unaFechaGen estadoPagado: estado [
+
+	cliente := unCliente.
+	cuit := unCuit.
+	diagnostico := unDiagnostico.
+	montoTotal := unMontoTotal.
+	fechaGen := unaFechaGen.
+	estadoPagado := estado.
+	colPagos := OrderedCollection new
+]
+
+{ #category : #propio }
+Factura >> montoAcumulado [
+|pagoAcumulado|
+	pagoAcumulado := 0.
+	pagoAcumulado := colPagos collect: [ :pago | pagoAcumulado := pagoAcumulado + (pago montoPago) ].
+	^pagoAcumulado 
+]
+
+{ #category : #accessing }
+Factura >> montoTotal [
+
+	^ montoTotal
+]
+
+{ #category : #propio }
+Factura >> pagoPendiente [
+|montoAPagar|
+
+montoAPagar := self montoTotal - self montoAcumulado.
+^montoAPagar
+]
+
+{ #category : #iniciador }
+Factura >> registrarPago: unPago [
+	"agregar estado en factura para cambiar el estado de la factura si esta pagada"
+
+	| pagoAcumulado |
+	estadoPagado
+		ifTrue: [ ^ self ]
+		ifFalse: [
+			pagoAcumulado := self montoAcumulado.
+			estadoPagado := pagoAcumulado >= montoTotal ]
 ]

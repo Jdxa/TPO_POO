@@ -12,9 +12,6 @@ Class {
 		'motivo',
 		'estado'
 	],
-	#classVars : [
-		'costoBase'
-	],
 	#category : #'TPO-POO'
 }
 
@@ -27,19 +24,26 @@ Tratamiento class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado [
 		iniciarFecha: unaFecha
 		motivo: unMotivo
 		estado: unEstado.
-	costoBase := 5000.
 	^ unTratamiento
 ]
 
+{ #category : #propio }
+Tratamiento >> costoTot [
+ |unCostoTotal|
+unCostoTotal := 5000.
+^unCostoTotal 
+]
+
 { #category : #comparacion }
-Tratamiento >> esValido [
+Tratamiento >> esTratValido [
 
 	^ fecha dayOfWeek between: 2 and: 6
 ]
 
 { #category : #iniciador }
 Tratamiento >> iniciarFecha: unaFecha motivo: unMotivo estado: unEstado [
-	fecha := unaFecha .
-	motivo := unMotivo .
-	estado := unEstado  
+
+	fecha := unaFecha.
+	motivo := unMotivo.
+	estado := unEstado.
 ]

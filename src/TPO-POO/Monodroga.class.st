@@ -37,3 +37,19 @@ valorMono := unValor .
 ventaLibre := esVentaLibre.
 stock := unStock.
 ]
+
+{ #category : #accesors }
+Monodroga >> stock [
+^stock
+]
+
+{ #category : #accesors }
+Monodroga >> tieneStock [
+
+	^ stock > 1
+]
+
+{ #category : #accesors }
+Monodroga >> valorMono [
+^valorMono 
+]

@@ -20,7 +20,7 @@ Class {
 }
 
 { #category : #constructor }
-Diagnostico class >> crearFecha: unaFecha descripcion: unaDescripcion medico: unMedico mascota: unaMascota colTratamiento: unaColTratamiento [
+Diagnostico class >> crearFecha: unaFecha descripcion: unaDescripcion medico: unMedico mascota: unaMascota [ 
 
 	| unDiagnostico |
 	unDiagnostico := self new.
@@ -34,7 +34,20 @@ Diagnostico class >> crearFecha: unaFecha descripcion: unaDescripcion medico: un
 
 { #category : #iniciador }
 Diagnostico >> agregarTratamiento: unTratamiento [
-	colTratamiento add: unTratamiento.
+	unTratamiento esValido ifTrue: [colTratamiento add: unTratamiento]. 
+]
+
+{ #category : #propio }
+Diagnostico >> calcularCosto [
+	|costoTot|
+	costoTot := 0.
+	colTratamiento do: [ :tratamiento | costoTot := costoTot + tratamiento costoTot ].
+	^costoTot
+]
+
+{ #category : #propio }
+Diagnostico >> getMascota [
+^mascota 
 ]
 
 { #category : #iniciador }

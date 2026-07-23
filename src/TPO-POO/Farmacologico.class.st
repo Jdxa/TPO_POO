@@ -30,13 +30,22 @@ Farmacologico class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado mo
 	^ unTratamiento
 ]
 
+{ #category : #propio }
+Farmacologico >> costoTot [
+
+	| costoTotal |
+	costoTotal := super costoTot + (dosis * monodroga valorMono).
+	costoTotal > 40000 ifTrue: [ costoTotal := costoTotal  * 0.9 ].
+	^ costoTotal
+]
+
 { #category : #comparacion }
-Farmacologico >> esValido [
+Farmacologico >> esTratValido [
 
 	| exito |
 	exito := monodroga esVentaLibre.
-	exito ifFalse: [ super esValido ifTrue: [ exito := true ]  ].
-	
+	exito ifFalse: [ super esTratValido ifTrue: [ exito := true ] ].
+
 	^ exito
 ]
 

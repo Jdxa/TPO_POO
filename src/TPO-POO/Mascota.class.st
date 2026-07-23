@@ -9,8 +9,7 @@ Class {
 		'especie',
 		'raza',
 		'fechaNac',
-		'peso',
-		'colDiagnostico'
+		'peso'
 	],
 	#category : #'TPO-POO'
 }
@@ -30,17 +29,11 @@ Mascota class >> crearNombre: unNombre especie: unaEspecie raza: unaRaza fechaNa
 ]
 
 { #category : #iniciador }
-Mascota >> agregarDiagnostico: unDiagnostico [
-	colDiagnostico add: unDiagnostico.
-]
-
-{ #category : #iniciador }
-Mascota >> iniciarNombre: unNombreMascota especie: unaEspecie raza: unaRaza fechaNac: unaFechaNac peso: unPeso [ 
+Mascota >> iniciarNombre: unNombreMascota especie: unaEspecie raza: unaRaza fechaNac: unaFechaNac peso: unPeso [
 
 	nombreMascota := unNombreMascota.
 	especie := unaEspecie.
 	raza := unaRaza.
 	fechaNac := unaFechaNac.
-	peso := unPeso.
-	colDiagnostico := OrderedCollection new.
+	peso := unPeso
 ]
