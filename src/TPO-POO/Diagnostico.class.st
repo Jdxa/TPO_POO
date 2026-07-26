@@ -34,7 +34,8 @@ Diagnostico class >> crearFecha: unaFecha descripcion: unaDescripcion medico: un
 
 { #category : #iniciador }
 Diagnostico >> agregarTratamiento: unTratamiento [
-	unTratamiento esValido ifTrue: [colTratamiento add: unTratamiento]. 
+
+	unTratamiento esTratValido ifTrue: [ colTratamiento add: unTratamiento ]
 ]
 
 { #category : #propio }
