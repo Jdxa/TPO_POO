@@ -44,6 +44,11 @@ Veterinaria >> agendarTurno: unTurno [
 ]
 
 { #category : #propio }
+Veterinaria >> agregarCliente: unCliente [
+ colCliente add: unCliente.
+]
+
+{ #category : #propio }
 Veterinaria >> agregarFactura: unaFactura [
 colFacturas add: unaFactura.
 
