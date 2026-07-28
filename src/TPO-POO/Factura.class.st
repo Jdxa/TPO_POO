@@ -98,12 +98,11 @@ montoAPagar := self montoTotal - self montoAcumulado.
 
 { #category : #iniciador }
 Factura >> registrarPago: unPago [
-	"agregar estado en factura para cambiar el estado de la factura si esta pagada"
-
 	| pagoAcumulado |
 	estadoPagado
 		ifTrue: [ ^ self ]
 		ifFalse: [
 			pagoAcumulado := self montoAcumulado.
-			estadoPagado := pagoAcumulado >= montoTotal ]
+			estadoPagado := pagoAcumulado >= montoTotal.
+			colPagos add: unPago ]
 ]
