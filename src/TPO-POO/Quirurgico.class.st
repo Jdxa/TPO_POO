@@ -12,8 +12,17 @@ Class {
 		'nivelRiesgo',
 		'tipoAnestesia'
 	],
+	#classVars : [
+		'TablaRiesgos'
+	],
 	#category : #'TPO-POO'
 }
+
+{ #category : #propios }
+Quirurgico class >> agregarRiesgo: unNivel porcentaje: unPorcentaje [
+	TablaRiesgos at: unNivel put: unPorcentaje.
+
+]
 
 { #category : #constructor }
 Quirurgico class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado nombre: unNombreProcedimiento nivelRiesgo: unNivelRiesgo tipoAnestesia: unTipoAnestesia [
@@ -24,16 +33,32 @@ unTratamiento iniciarNombre: unNombreProcedimiento  nivelRiesgo: unNivelRiesgo  
 ^unTratamiento 
 ]
 
+{ #category : #propios }
+Quirurgico class >> eliminarRiesgo: unNivel [
+	TablaRiesgos removeKey: unNivel ifAbsent: [ "no hace nada" ] 
+]
+
+{ #category : #propios }
+Quirurgico class >> iniciarTabla [
+	TablaRiesgos :=  Dictionary new.
+	TablaRiesgos at: 1 put: 10.
+	TablaRiesgos at: 2 put: 20.
+]
+
+{ #category : #propios }
+Quirurgico class >> tablaRiesgos [
+^TablaRiesgos 
+]
+
 { #category : #propio }
 Quirurgico >> costoTot [
-
-	| unCostoTotal |
-	unCostoTotal := super costoTot.
-	tipoAnestesia = 'Local' ifTrue: [ unCostoTotal := unCostoTotal + 30000 ].
-	tipoAnestesia = 'Regional' ifTrue: [ unCostoTotal := unCostoTotal + 60000 ].
-	tipoAnestesia = 'General' ifTrue: [ unCostoTotal := unCostoTotal + 100000 ].
-	unCostoTotal := unCostoTotal * (1 +(nivelRiesgo /10 )).
-	^ unCostoTotal
+	|subTotal totalAnestesia porcentajeRiesgo|
+	totalAnestesia := Dictionary new at: 'General' put: 100000; at: 'Regional' put: 60000; at: 'Local' put: 30000;at: tipoAnestesia ifAbsent: [0].
+	subTotal := CostoBase + totalAnestesia.
+	porcentajeRiesgo := TablaRiesgos at: nivelRiesgo ifAbsent: [ 0 ].
+	
+	^ subTotal * (1 + (porcentajeRiesgo / 100)) 
+	
 ]
 
 { #category : #comparacion }

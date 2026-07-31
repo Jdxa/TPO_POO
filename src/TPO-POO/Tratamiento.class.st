@@ -12,8 +12,16 @@ Class {
 		'motivo',
 		'estado'
 	],
+	#classVars : [
+		'CostoBase'
+	],
 	#category : #'TPO-POO'
 }
+
+{ #category : #propio }
+Tratamiento class >> costoBase [
+^CostoBase 
+]
 
 { #category : #constructor }
 Tratamiento class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado [
@@ -24,6 +32,7 @@ Tratamiento class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado [
 		iniciarFecha: unaFecha
 		motivo: unMotivo
 		estado: unEstado.
+	CostoBase := 5000.
 	^ unTratamiento
 ]
 
