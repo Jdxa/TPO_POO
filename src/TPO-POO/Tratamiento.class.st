@@ -38,9 +38,8 @@ Tratamiento class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado [
 
 { #category : #propio }
 Tratamiento >> costoTot [
- |unCostoTotal|
-unCostoTotal := 5000.
-^unCostoTotal 
+
+ ^ self subclassResponsibility 
 ]
 
 { #category : #comparacion }
