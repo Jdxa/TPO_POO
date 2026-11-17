@@ -14,6 +14,20 @@ VentanaPrincipal class >> abrir [
 ^ self new openInWorld 
 ]
 
+{ #category : #actualizadores }
+VentanaPrincipal >> actualizarListaClientes [
+
+	| texto |
+	texto := String streamContents: [ :stream |
+		         modelo clientes do: [ :cliente |
+			         stream
+				         nextPutAll: cliente nombre;
+				         space;
+				         nextPutAll: cliente apellido;
+				         cr ] ].
+	listaClientes contents: texto.
+]
+
 { #category : #initialize }
 VentanaPrincipal >> agregarBoton: unTexto accion: unSelector posicion: unPunto [
 	|boton|
@@ -74,7 +88,23 @@ VentanaPrincipal >> agregarBotones [
 	self
 		agregarBoton: 'Consultar recaudacion'
 		accion: #consultarRecaudacion
-		posicion: 30 @ 350
+		posicion: 30 @ 350.
+	self
+		agregarBoton: 'Solicitar Turno'
+		accion: #solicitarTurno
+		posicion: 30 @ 400.
+	self
+		agregarBoton: 'Cancelar Turno'
+		accion: #cancelarTurno
+		posicion: 230 @ 400.
+	self
+		agregarBoton: 'Consultar turnos'
+		accion: #consultarTurnos
+		posicion: 430 @ 400.
+	self
+		agregarBoton: 'Registrar atencion'
+		accion: #registrarAtencion
+		posicion: 30 @ 450
 ]
 
 { #category : #initialize }
@@ -127,6 +157,12 @@ VentanaPrincipal >> asignarTratamiento [
 ]
 
 { #category : #botones }
+VentanaPrincipal >> cancelarTurno [
+
+	UIManager default inform: 'Cancelar Turno'
+]
+
+{ #category : #botones }
 VentanaPrincipal >> consultarFacturas [
 
 	UIManager default inform: 'Facturas consultadas'
@@ -151,6 +187,12 @@ VentanaPrincipal >> consultarTratamientos [
 ]
 
 { #category : #botones }
+VentanaPrincipal >> consultarTurnos [
+
+	UIManager default inform: 'Consultar turnos'
+]
+
+{ #category : #botones }
 VentanaPrincipal >> facturarDiagnostico [
 
 	UIManager default inform: 'Diagnostico facturado'
@@ -160,22 +202,56 @@ VentanaPrincipal >> facturarDiagnostico [
 VentanaPrincipal >> initialize [
 
 	super initialize.
+	
+	modelo := Veterinaria crearCuit: '20-0000000-0'.
+	
 	self extent: 800 @ 600.
 	self color: Color veryLightGray.
-	
-	self agregarTitulo.
-	self agregarListaClientes .
-	self agregarCantidadMascotas.
-	self agregarBotones 
-	
-	
 
+	self agregarTitulo.
+	self agregarListaClientes.
+	self agregarCantidadMascotas.
+	self agregarBotones
+]
+
+{ #category : #botones }
+VentanaPrincipal >> registrarAtencion [
+
+	UIManager default inform: 'Registrar atencion'
 ]
 
 { #category : #botones }
 VentanaPrincipal >> registrarCliente [
 
-	UIManager default inform: 'Cliente registrado'
+	| dni nombre apellido domicilio email telefono nuevoCliente |
+	dni := UIManager default request: 'Ingrese el DNI'.
+	dni ifNil: [ ^ self ].
+
+	nombre := UIManager default request: 'Ingrese el nombre'.
+	nombre ifNil: [ ^ self ].
+
+	apellido := UIManager default request: 'Ingrese el apellido'.
+	apellido ifNil: [ ^ self ].
+
+	domicilio := UIManager default request: 'Ingrese el domicilio'.
+	domicilio ifNil: [ ^ self ].
+
+	email := UIManager default request: 'Ingrese el email'.
+	email ifNil: [ ^ self ].
+
+	telefono := UIManager default request: 'Ingrese el telefono'.
+	telefono ifNil: [ ^ self ].
+
+	nuevoCliente := Cliente
+		                crearNroDni: dni
+		                nombre: nombre
+		                apellido: apellido
+		                domicilio: domicilio
+		                email: email
+		                telefono: telefono.
+	modelo agregarCliente: nuevoCliente.
+	self actualizarListaClientes.
+	UIManager default inform: 'Cliente registrado correctamente'
 ]
 
 { #category : #botones }
@@ -194,4 +270,9 @@ VentanaPrincipal >> registrarMascota [
 VentanaPrincipal >> registrarPago [
 
 	UIManager default inform: 'Pago registrado'
+]
+
+{ #category : #botones }
+VentanaPrincipal >> solicitarTurno [
+	UIManager default inform: 'Solicitar Turno'
 ]
