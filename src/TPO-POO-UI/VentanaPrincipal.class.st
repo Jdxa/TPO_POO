@@ -57,6 +57,10 @@ VentanaPrincipal >> agregarBoton: unTexto accion: unSelector posicion: unPunto [
 VentanaPrincipal >> agregarBotones [
 
 	self
+		agregarBoton: 'Cerrar'
+		accion: #cerrarVentana
+		posicion: 600 @ 550.
+	self
 		agregarBoton: 'Registar Cliente'
 		accion: #registrarCliente
 		posicion: 30 @ 200.
@@ -172,6 +176,35 @@ VentanaPrincipal >> cancelarTurno [
 	UIManager default inform: 'Cancelar Turno'
 ]
 
+{ #category : #initialize }
+VentanaPrincipal >> cargarVeterinariosPrueba [
+   | veterinario1 veterinario2 |
+
+    veterinario1 := Veterinario
+        crearNroDni: '30111222'
+        nombre: 'Juan'
+        apellido: 'Perez'
+        domicilio: 'San Martin 123'
+        fechaNac: (Date year: 1985 month: 5 day: 12)
+        CUIL: '20-30111222-3'.
+
+    veterinario2 := Veterinario
+        crearNroDni: '28444555'
+        nombre: 'Maria'
+        apellido: 'Gomez'
+        domicilio: 'Belgrano 456'
+        fechaNac: (Date year: 1990 month: 8 day: 20)
+        CUIL: '27-28444555-4'.
+
+    modelo agregarVeterinario: veterinario1.
+    modelo agregarVeterinario: veterinario2. 
+]
+
+{ #category : #botones }
+VentanaPrincipal >> cerrarVentana [
+ self delete.
+]
+
 { #category : #botones }
 VentanaPrincipal >> consultarFacturas [
 
@@ -214,6 +247,7 @@ VentanaPrincipal >> initialize [
 	super initialize.
 
 	modelo := Veterinaria crearCuit: '20-0000000-0'.
+	self cargarVeterinariosPrueba.
 
 	self extent: 800 @ 600.
 	self color: Color veryLightGray.
@@ -222,9 +256,9 @@ VentanaPrincipal >> initialize [
 	self agregarListaClientes.
 	self agregarCantidadMascotas.
 	self agregarBotones.
-	
+
 	self actualizarListaClientes.
-	self actualizarCantidadMascotas 
+	self actualizarCantidadMascotas
 ]
 
 { #category : #botones }
@@ -325,5 +359,58 @@ VentanaPrincipal >> registrarPago [
 
 { #category : #botones }
 VentanaPrincipal >> solicitarTurno [
-	UIManager default inform: 'Solicitar Turno'
+
+	| dniCliente cliente nombreMascota mascota dniVeterinario veterinario fechaTexto fecha hora motivo nuevoTurno exito |
+	dniCliente := UIManager default request: 'DNI del cliente'.
+	dniCliente ifNil: [ ^ self ].
+
+	cliente := modelo buscarClientePorDni: dniCliente.
+	cliente ifNil: [
+		UIManager default inform: 'No existe ese cliente'.
+		^ self ].
+
+	nombreMascota := UIManager default request: 'Nombre de la mascota'.
+	nombreMascota ifNil: [ ^ self ].
+
+	mascota := cliente mascotas
+		           detect: [ :unaMascota |
+		           unaMascota nombreMascota = nombreMascota ]
+		           ifNone: [ nil ].
+	mascota ifNil: [
+		UIManager default inform: 'El cliente no tiene mascota'.
+		^ self ].
+	dniVeterinario := UIManager default request: 'DNI del veterinario'.
+	dniVeterinario ifNil: [ ^ self ].
+
+	veterinario := modelo veterinarios
+		               detect: [ :unVeterinario |
+		               unVeterinario nroDoc = dniVeterinario ]
+		               ifNone: [ nil ].
+	veterinario ifNil: [
+		UIManager default inform: 'No existe ese veterinario'.
+		^ self ].
+
+	fechaTexto := UIManager default request: 'Fecha (DD/MM/AAAA)'.
+	fechaTexto ifNil: [ ^ self ].
+	fecha := Date readFrom: fechaTexto readStream.
+	hora := UIManager default request: 'Hora'.
+	hora ifNil: [ ^ self ].
+
+	motivo := UIManager default request: 'Motivo del turno'.
+	motivo ifNil: [ ^ self ].
+
+	nuevoTurno := Turno
+		              crearFecha: fecha
+		              hora: hora
+		              estado: 'Pendiente'
+		              motivo: motivo
+		              cliente: cliente
+		              veterinario: veterinario
+		              mascota: mascota.
+	exito := modelo agendarTurno: nuevoTurno.
+	exito
+		ifTrue: [ UIManager default inform: 'Turno agendado correctamente' ]
+		ifFalse: [
+			UIManager default inform:
+				'No se pudo agendar el turno. Verifique la disponibilidad y las condiciones' ].
 ]

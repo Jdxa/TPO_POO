@@ -54,6 +54,11 @@ colFacturas add: unaFactura.
 
 ]
 
+{ #category : #propio }
+Veterinaria >> agregarVeterinario: unVeterinario [
+	colVeterinario add: unVeterinario.
+]
+
 { #category : #visualizer }
 Veterinaria >> buscarCliente: unaMascota [
 
