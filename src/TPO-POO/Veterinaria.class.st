@@ -64,6 +64,11 @@ Veterinaria >> buscarCliente: unaMascota [
 	^ unCliente
 ]
 
+{ #category : #visualizer }
+Veterinaria >> clientes [
+^colCliente 
+]
+
 { #category : #propio }
 Veterinaria >> facturasPendientes [
 
@@ -115,4 +120,14 @@ colMonodrogas := OrderedCollection new.
 colAplicaciones := OrderedCollection new.
 colTurnos := OrderedCollection new.
 
+]
+
+{ #category : #visualizer }
+Veterinaria >> turnos [ 
+^colTurnos 
+]
+
+{ #category : #visualizer }
+Veterinaria >> veterinarios [
+	^colVeterinario 
 ]

@@ -30,10 +30,20 @@ Persona class >> crearNroDni: unNroDoc nombre: unNombre apellido: unApellido dom
 	^ unaPersona
 ]
 
+{ #category : #visualizer }
+Persona >> apellido [
+^apellido 
+]
+
 { #category : #iniciadores }
 Persona >> iniciarPersonaNroDoc: unNroDoc nombre: unNombre apellido: unApellido domicilio: unDomicilio [
 	nroDoc := unNroDoc .
 	nombre := unNombre .
 	apellido := unApellido .
 	domicilio := unDomicilio .
+]
+
+{ #category : #visualizer }
+Persona >> nombre [
+^nombre 
 ]

@@ -55,3 +55,8 @@ Cliente >> iniciarEmail: unEmail telefono: unTelefono [
 	telefono := unTelefono.
 	colMascotas := OrderedCollection new.
 ]
+
+{ #category : #visualizer }
+Cliente >> mascotas [
+^colMascotas 
+]
