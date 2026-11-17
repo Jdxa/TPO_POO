@@ -64,6 +64,11 @@ Veterinaria >> buscarCliente: unaMascota [
 	^ unCliente
 ]
 
+{ #category : #propio }
+Veterinaria >> buscarClientePorDni: unDni [
+ ^colCliente detect: [ :cliente| cliente nroDoc = unDni  ]ifNone: [ nil ]. 
+]
+
 { #category : #visualizer }
 Veterinaria >> clientes [
 ^colCliente 

@@ -15,6 +15,16 @@ VentanaPrincipal class >> abrir [
 ]
 
 { #category : #actualizadores }
+VentanaPrincipal >> actualizarCantidadMascotas [
+
+	| cantidad |
+	cantidad := modelo clientes
+		            inject: 0
+		            into: [ :total :cliente | total + cliente mascotas size ].
+	textoCantidad contents: cantidad asString.
+]
+
+{ #category : #actualizadores }
 VentanaPrincipal >> actualizarListaClientes [
 
 	| texto |
@@ -202,16 +212,19 @@ VentanaPrincipal >> facturarDiagnostico [
 VentanaPrincipal >> initialize [
 
 	super initialize.
-	
+
 	modelo := Veterinaria crearCuit: '20-0000000-0'.
-	
+
 	self extent: 800 @ 600.
 	self color: Color veryLightGray.
 
 	self agregarTitulo.
 	self agregarListaClientes.
 	self agregarCantidadMascotas.
-	self agregarBotones
+	self agregarBotones.
+	
+	self actualizarListaClientes.
+	self actualizarCantidadMascotas 
 ]
 
 { #category : #botones }
@@ -263,7 +276,45 @@ VentanaPrincipal >> registrarDiagnostico [
 { #category : #botones }
 VentanaPrincipal >> registrarMascota [
 
-	UIManager default inform: 'Mascota registrada'
+	| dni cliente nombre especie raza fechaTexto pesoTexto fecha peso nuevaMascota |
+	dni := UIManager default request: 'Ingrese el DNI del cliente'.
+	dni ifNil: [ ^ self ].
+
+	cliente := modelo buscarClientePorDni: dni.
+
+	cliente ifNil: [
+		UIManager default inform: 'No existe un cliente con ese DNI'.
+		^ self ].
+
+	nombre := UIManager default request:
+		          'Ingrese el nombre de la mascota'.
+	nombre ifNil: [ ^ self ].
+
+	especie := UIManager default request: 'Ingrese la especie'.
+	especie ifNil: [ ^ self ].
+
+	raza := UIManager default request: 'Ingrese la raza'.
+	raza ifNil: [ ^ self ].
+
+	fechaTexto := UIManager default request:
+		              'Fecha de nacimiento (DD/MM/AAA)'.
+	fechaTexto ifNil: [ ^ self ].
+
+	pesoTexto := UIManager default request: 'Ingrese el peso'.
+	pesoTexto ifNil: [ ^ self ].
+
+	fecha := Date readFrom: fechaTexto readStream.
+	peso := Number readFrom: pesoTexto readStream.
+
+	nuevaMascota := Mascota
+		                crearNombre: nombre
+		                especie: especie
+		                raza: raza
+		                fechaNac: fecha
+		                peso: peso.
+	cliente agregarMascota: nuevaMascota.
+	self actualizarCantidadMascotas.
+	UIManager default inform: 'Mascota registrada correctamente'
 ]
 
 { #category : #botones }

@@ -47,3 +47,8 @@ Persona >> iniciarPersonaNroDoc: unNroDoc nombre: unNombre apellido: unApellido 
 Persona >> nombre [
 ^nombre 
 ]
+
+{ #category : #visualizer }
+Persona >> nroDoc [
+ ^nroDoc 
+]
