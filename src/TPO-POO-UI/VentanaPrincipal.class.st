@@ -126,8 +126,12 @@ VentanaPrincipal >> agregarBotones [
 
 	self
 		agregarBoton: 'Recaudacion entre fechas'
-		accion: #consultarRecaudacionEntreFechas 
-		posicion: 230 @ 350
+		accion: #consultarRecaudacionEntreFechas
+		posicion: 230 @ 350.
+	self
+		agregarBoton: 'Historial turnos cliente'
+		accion: #consultarHistorialTurnosCliente
+		posicion: 430 @ 350
 ]
 
 { #category : #initialize }
