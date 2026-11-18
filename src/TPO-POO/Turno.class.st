@@ -31,9 +31,25 @@ unTurno iniciarFecha: unaFecha hora: unaHora estado: unEstado motivo: unMotivo c
 ^unTurno 
 ]
 
+{ #category : #visualizer }
+Turno >> cliente [
+^cliente 
+]
+
 { #category : #propio }
 Turno >> esAusente [
  ^ estado = 'Ausente'
+]
+
+{ #category : #visualizer }
+Turno >> estado [
+
+^estado
+]
+
+{ #category : #propio }
+Turno >> estado: unEstado [
+	estado := unEstado 
 ]
 
 { #category : #propio }
@@ -56,6 +72,12 @@ motivo := unMotivo .
 cliente := unCliente.
 veterinario := unVeterinario .
 mascota := unaMascota 
+]
+
+{ #category : #visualizer }
+Turno >> mascota [
+
+	^ mascota 
 ]
 
 { #category : #propio }
@@ -81,6 +103,11 @@ Turno >> mismoDia: unDia [
 { #category : #propio }
 Turno >> mismoVet: unVeterinario [
   ^veterinario = unVeterinario.
+]
+
+{ #category : #visualizer }
+Turno >> motivo [
+^motivo
 ]
 
 { #category : #propio }

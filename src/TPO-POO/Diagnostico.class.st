@@ -46,6 +46,16 @@ Diagnostico >> calcularCosto [
 	^costoTot
 ]
 
+{ #category : #visualizer }
+Diagnostico >> descripcion [
+^descripcion 
+]
+
+{ #category : #visualizer }
+Diagnostico >> fechaDiagnostico [
+^fechaDiagnostico 
+]
+
 { #category : #propio }
 Diagnostico >> getMascota [
 ^mascota 
@@ -59,4 +69,20 @@ Diagnostico >> iniciarFechaDiagnostico: unaFecha descripcion: unaDescripcion med
 	medico := unMedico.
 	mascota := unaMascota.
 	colTratamiento := OrderedCollection new.
+]
+
+{ #category : #visualizer }
+Diagnostico >> mascota [ 
+^mascota 
+]
+
+{ #category : #visualizer }
+Diagnostico >> medico [
+^medico 
+]
+
+{ #category : #visualizer }
+Diagnostico >> tratamientos [
+
+^colTratamiento 
 ]

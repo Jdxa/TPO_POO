@@ -48,6 +48,11 @@ Factura >> estaPagada [
 ]
 
 { #category : #accessing }
+Factura >> fechaGen [ 
+	^fechaGen 
+]
+
+{ #category : #accessing }
 Factura >> getDiagnostico [
  ^ diagnostico 
 ]
@@ -76,10 +81,12 @@ Factura >> iniciarCliente: unCliente cuit: unCuit diagnostico: unDiagnostico mon
 
 { #category : #propio }
 Factura >> montoAcumulado [
-|pagoAcumulado|
+
+	| pagoAcumulado |
 	pagoAcumulado := 0.
-	pagoAcumulado := colPagos collect: [ :pago | pagoAcumulado := pagoAcumulado + (pago montoPago) ].
-	^pagoAcumulado 
+	colPagos do: [ :pago |
+		                pagoAcumulado := pagoAcumulado + pago montoPago ].
+	^ pagoAcumulado
 ]
 
 { #category : #accessing }
@@ -96,15 +103,18 @@ montoAPagar := self montoTotal - self montoAcumulado.
 ^montoAPagar
 ]
 
+{ #category : #accessing }
+Factura >> pagos [
+^colPagos 
+]
+
 { #category : #iniciador }
 Factura >> registrarPago: unPago [
 
 	| pagoAcumulado |
 	estadoPagado
-		ifTrue: [ ^ self ]
-		ifFalse: [
+		ifTrue: [ ^ self ].
 			colPagos add: unPago.
 			pagoAcumulado := self montoAcumulado.
-			estadoPagado := pagoAcumulado >= montoTotal.
-			 ]
+			estadoPagado := pagoAcumulado >= montoTotal 
 ]

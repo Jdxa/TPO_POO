@@ -37,3 +37,8 @@ Mascota >> iniciarNombre: unNombreMascota especie: unaEspecie raza: unaRaza fech
 	fechaNac := unaFechaNac.
 	peso := unPeso
 ]
+
+{ #category : #visualizer }
+Mascota >> nombreMascota [
+	^nombreMascota 
+]

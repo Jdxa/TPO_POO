@@ -34,7 +34,7 @@ Farmacologico class >> crearFecha: unaFecha motivo: unMotivo estado: unEstado mo
 Farmacologico >> costoTot [
 
 	| costoTotal |
-	costoTotal := CostoBase  + (dosis * monodroga valorMono).
+	costoTotal := Tratamiento costoBase  + (dosis * monodroga valorMono).
 	costoTotal > 40000 ifTrue: [ costoTotal := costoTotal * 0.9 ].
 	^ costoTotal
 ]

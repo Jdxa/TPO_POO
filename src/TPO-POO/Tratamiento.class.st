@@ -20,7 +20,8 @@ Class {
 
 { #category : #propio }
 Tratamiento class >> costoBase [
-^CostoBase 
+CostoBase ifNil: [ CostoBase := 5000 ].
+	^ CostoBase
 ]
 
 { #category : #constructor }
