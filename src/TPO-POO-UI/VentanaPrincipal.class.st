@@ -382,6 +382,102 @@ VentanaPrincipal >> cargarClientesPrueba [
 
 ]
 
+{ #category : #test }
+VentanaPrincipal >> cargarDiagnosticosPrueba [
+    | cliente2 cliente3 mascota22 mascota31 vet1 vet2
+      amoxicilina paracetamol
+      diagnosticoRocky diagnosticoLuna1 diagnosticoLuna2
+      farm1 farm2 farm3 quir1 quir2 |
+
+    cliente2 := modelo buscarClientePorDni: '32444555'.
+    cliente3 := modelo buscarClientePorDni: '29888777'.
+
+    mascota22 := cliente2 mascotas at: 2.
+    mascota31 := cliente3 mascotas at: 1.
+
+    vet1 := modelo veterinarios at: 1.
+    vet2 := modelo veterinarios at: 2.
+
+    amoxicilina := modelo monodrogas
+        detect: [ :m | m nombreMono = 'Amoxicilina' ].
+
+    paracetamol := modelo monodrogas
+        detect: [ :m | m nombreMono = 'Paracetamol' ].
+
+    "DIAGNOSTICO 1: ROCKY"
+    diagnosticoRocky := Diagnostico
+        crearFecha: (Date year: 2026 month: 3 day: 2)
+        descripcion: 'Infeccion y necesidad de intervencion'
+        medico: vet1
+        mascota: mascota22.
+
+    farm1 := Farmacologico
+        crearFecha: (Date year: 2026 month: 3 day: 3)
+        motivo: 'Tratamiento de infeccion'
+        estado: 'Pendiente'
+        monodroga: amoxicilina
+        dosis: 2
+        frecuencia: 'Cada 8 horas'.
+
+    quir1 := Quirurgico
+        crearFecha: (Date year: 2026 month: 3 day: 4)
+        motivo: 'Intervencion quirurgica'
+        estado: 'Pendiente'
+        nombre: 'Cirugia'
+        nivelRiesgo: 1
+        tipoAnestesia: 'Local'.
+
+    diagnosticoRocky agregarTratamiento: farm1.
+    diagnosticoRocky agregarTratamiento: quir1.
+"DIAGNOSTICO 2: LUNA"
+    diagnosticoLuna1 := Diagnostico
+        crearFecha: (Date year: 2026 month: 3 day: 5)
+        descripcion: 'Intervencion quirurgica'
+        medico: vet2
+        mascota: mascota31.
+
+    quir2 := Quirurgico
+        crearFecha: (Date year: 2026 month: 3 day: 6)
+        motivo: 'Cirugia'
+        estado: 'Pendiente'
+        nombre: 'Cirugia correctiva'
+        nivelRiesgo: 2
+        tipoAnestesia: 'General'.
+
+    diagnosticoLuna1 agregarTratamiento: quir2.
+
+    "DIAGNOSTICO 3: LUNA"
+    diagnosticoLuna2 := Diagnostico
+        crearFecha: (Date year: 2026 month: 3 day: 9)
+        descripcion: 'Tratamiento farmacologico'
+        medico: vet1
+        mascota: mascota31.
+
+    farm2 := Farmacologico
+        crearFecha: (Date year: 2026 month: 3 day: 10)
+        motivo: 'Tratamiento analgesico'
+        estado: 'Pendiente'
+        monodroga: paracetamol
+        dosis: 2
+        frecuencia: 'Cada 12 horas'.
+
+    farm3 := Farmacologico
+        crearFecha: (Date year: 2026 month: 3 day: 11)
+        motivo: 'Tratamiento complementario'
+        estado: 'Pendiente'
+        monodroga: amoxicilina
+        dosis: 1
+        frecuencia: 'Cada 8 horas'.
+
+    diagnosticoLuna2 agregarTratamiento: farm2.
+    diagnosticoLuna2 agregarTratamiento: farm3.
+
+    modelo agregarDiagnostico: diagnosticoRocky.
+    modelo agregarDiagnostico: diagnosticoLuna1.
+    modelo agregarDiagnostico: diagnosticoLuna2.
+
+]
+
 { #category : #initialize }
 VentanaPrincipal >> cargarMonodrogasPrueba [
     | monodroga1 monodroga2 |
@@ -651,6 +747,7 @@ VentanaPrincipal >> initialize [
 	self cargarMonodrogasPrueba.
 	self cargarClientesPrueba.
 	self cargarVacunasPrueba.
+	self cargarDiagnosticosPrueba.
 	self extent: 800 @ 600.
 	self color: Color veryLightGray.
 
