@@ -167,7 +167,96 @@ self addMorph:  titulo.
 
 { #category : #botones }
 VentanaPrincipal >> asignarTratamiento [
-	UIManager default inform: 'Asignar Tratamiento'.
+
+	| diagnosticoTexto numero diagnostico tipo fechaTexto fecha motivo estado tratamiento nombreMono monodroga dosisTexto frecuencia partes|
+	modelo diagnosticos isEmpty ifTrue: [
+		UIManager default inform: 'No hay diagnosticos registrados'.
+		^ self ].
+
+	diagnosticoTexto := String streamContents: [ :stream |
+		                    modelo diagnosticos withIndexDo: [
+			                    :unDiagnostico
+			                    :indice |
+			                    stream
+				                    nextPutAll: indice asString;
+				                    nextPutAll: ' - ';
+				                    nextPutAll: unDiagnostico descripcion;
+				                    cr ] ].
+
+	UIManager default inform: diagnosticoTexto.
+
+	numero := UIManager default request: 'Numero del diagnostico'.
+	numero ifNil: [ ^ self ].
+
+	numero := numero asNumber.
+
+	(numero isInteger and: [
+		 numero >= 1 and: [ numero <= modelo diagnosticos size ] ])
+		ifFalse: [
+			UIManager default inform: 'Numero invalido'.
+			^ self ].
+
+	diagnostico := modelo diagnosticos at: numero.
+
+	tipo := UIManager default
+		        chooseFrom: #( 'Farmacologico' 'Quirurgico' )
+		        values: #( 'Farmacologico' 'Quirurgico' )
+		        title: 'Seleccione el tipo de tratamiento'.
+
+	tipo ifNil: [ ^ self ].
+
+	fechaTexto := UIManager default request: 'Fecha (DD/MM/AAA)'.
+	fechaTexto ifNil: [ ^ self ].
+	partes := fechaTexto substrings: '/'.
+	fecha := Date year: (partes at: 3)asNumber month: (partes at: 2)asNumber day:  (partes at: 1)asNumber .
+
+	motivo := UIManager default request: 'Motivo del tratamiento'.
+	motivo ifNil: [ ^ self ].
+
+	estado := 'Pendiente'.
+
+	tipo = 'Farmacologico'
+		ifTrue: [
+			nombreMono := UIManager default request: 'Nombre de la monodroga'.
+			nombreMono ifNil: [ ^ self ].
+
+			monodroga := modelo monodrogas
+				             detect: [ :unaMono |
+				             unaMono nombreMono asLowercase
+				             = nombreMono asLowercase ]
+				             ifNone: [ nil ].
+
+			monodroga ifNil: [
+				UIManager default inform: 'No existe esa monodroga'.
+				^ self ].
+
+			monodroga tieneStock ifFalse: [
+				UIManager default inform: 'No hay stock suficiente'.
+				^ self ].
+
+			dosisTexto := UIManager default request: 'Ingrese la dosis'.
+			dosisTexto ifNil: [ ^ self ].
+
+			frecuencia := UIManager default request: 'Ingrese la frecuencia'.
+			frecuencia ifNil: [ ^ self ].
+
+			tratamiento := Farmacologico
+				               crearFecha: fecha
+				               motivo: motivo
+				               estado: estado
+				               monodroga: monodroga
+				               dosis: dosisTexto asNumber
+				               frecuencia: frecuencia ]
+		ifFalse: [
+			tratamiento := self
+				               crearTratamientoQuirurgicoConFecha: fecha
+				               motivo: motivo
+				               estado: estado.
+			tratamiento ifNil: [ ^ self ] ].
+
+	diagnostico agregarTratamiento: tratamiento.
+
+	UIManager default inform: 'Tratamiento asignado correctamente'
 ]
 
 { #category : #botones }
@@ -214,6 +303,26 @@ VentanaPrincipal >> cancelarTurno [
     turno estado: 'Cancelado'.
 
     UIManager default inform: 'Turno cancelado correctamente'.
+]
+
+{ #category : #initialize }
+VentanaPrincipal >> cargarMonodrogasPrueba [
+    | monodroga1 monodroga2 |
+
+    monodroga1 := Monodroga
+        crearNombre: 'Amoxicilina'
+        valorMono: 2500
+        ventaLibre: false
+        stock: 20.
+
+    monodroga2 := Monodroga
+        crearNombre: 'Paracetamol'
+        valorMono: 1500
+        ventaLibre: true
+        stock: 15.
+
+    modelo agregarMonodroga: monodroga1.
+    modelo agregarMonodroga: monodroga2.
 ]
 
 { #category : #initialize }
@@ -321,6 +430,39 @@ VentanaPrincipal >> consultarTurnos [
     UIManager default inform: texto.
 ]
 
+{ #category : #aux }
+VentanaPrincipal >> crearTratamientoQuirurgicoConFecha: fecha motivo: motivo estado: estado [
+    | nombre nivelTexto nivel anestesia |
+
+    nombre := UIManager default request: 'Nombre del procedimiento'.
+    nombre ifNil: [ ^ nil ].
+
+    nivelTexto := UIManager default request: 'Nivel de riesgo (1 o 2)'.
+    nivelTexto ifNil: [ ^ nil ].
+
+    nivel := nivelTexto asNumber.
+
+    (nivel = 1 or: [ nivel = 2 ]) ifFalse: [
+        UIManager default inform: 'Nivel de riesgo invalido'.
+        ^ nil
+    ].
+
+    anestesia := UIManager default
+        chooseFrom: #('General' 'Regional' 'Local')
+        values: #('General' 'Regional' 'Local')
+        title: 'Tipo de anestesia'.
+
+    anestesia ifNil: [ ^ nil ].
+
+    ^ Quirurgico
+        crearFecha: fecha
+        motivo: motivo
+        estado: estado
+        nombre: nombre
+        nivelRiesgo: nivel
+        tipoAnestesia: anestesia.
+]
+
 { #category : #botones }
 VentanaPrincipal >> facturarDiagnostico [
 
@@ -334,6 +476,7 @@ VentanaPrincipal >> initialize [
 
 	modelo := Veterinaria crearCuit: '20-0000000-0'.
 	self cargarVeterinariosPrueba.
+	self cargarMonodrogasPrueba.
 
 	self extent: 800 @ 600.
 	self color: Color veryLightGray.
@@ -390,7 +533,59 @@ VentanaPrincipal >> registrarCliente [
 { #category : #botones }
 VentanaPrincipal >> registrarDiagnostico [
 
-	UIManager default inform: 'Diagnostico Registrado'
+	| dniCliente cliente nombreMascota mascota dniVeterinario veterinario fechaTexto fecha descripcion nuevoDiagnostico |
+	dniCliente := UIManager default request: 'DNI del cliente'.
+	dniCliente ifNil: [ ^ self ].
+
+	cliente := modelo buscarClientePorDni: dniCliente.
+
+	cliente ifNil: [
+		UIManager default inform: 'No existe ese cliente'.
+		^ self ].
+
+	nombreMascota := UIManager default request: 'Nombre de la mascota'.
+	nombreMascota ifNil: [ ^ self ].
+
+	mascota := cliente mascotas
+		           detect: [ :unaMascota |
+		           unaMascota nombreMascota = nombreMascota ]
+		           ifNone: [ nil ].
+
+	mascota ifNil: [
+		UIManager default inform: 'No existe esa mascota para el cliente'.
+		^ self ].
+
+	dniVeterinario := UIManager default request: 'DNI del veterinario'.
+	dniVeterinario ifNil: [ ^ self ].
+
+	veterinario := modelo veterinarios
+		               detect: [ :unVeterinario |
+		               unVeterinario nroDoc = dniVeterinario ]
+		               ifNone: [ nil ].
+
+	veterinario ifNil: [
+		UIManager default inform: 'No existe ese veterinario'.
+		^ self ].
+
+	fechaTexto := UIManager default request:
+		              'Fecha del diagnostico (DD-MM-AAAA)'.
+	fechaTexto ifNil: [ ^ self ].
+
+	fecha := Date readFrom: fechaTexto readStream.
+
+	descripcion := UIManager default request:
+		               'Descripcion del diagnostico'.
+	descripcion ifNil: [ ^ self ].
+
+	nuevoDiagnostico := Diagnostico
+		                    crearFecha: fecha
+		                    descripcion: descripcion
+		                    medico: veterinario
+		                    mascota: mascota.
+
+	modelo agregarDiagnostico: nuevoDiagnostico.
+
+	UIManager default inform: 'Diagnostico registrado correctamente'
 ]
 
 { #category : #botones }

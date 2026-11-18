@@ -49,9 +49,19 @@ Veterinaria >> agregarCliente: unCliente [
 ]
 
 { #category : #propio }
+Veterinaria >> agregarDiagnostico: unDiagnostico [
+	colDiagnostico add: unDiagnostico 
+]
+
+{ #category : #propio }
 Veterinaria >> agregarFactura: unaFactura [
 colFacturas add: unaFactura.
 
+]
+
+{ #category : #propio }
+Veterinaria >> agregarMonodroga: unaMonodroga [
+	colMonodrogas add: unaMonodroga 
 ]
 
 { #category : #propio }
@@ -77,6 +87,11 @@ Veterinaria >> buscarClientePorDni: unDni [
 { #category : #visualizer }
 Veterinaria >> clientes [
 ^colCliente 
+]
+
+{ #category : #visualizer }
+Veterinaria >> diagnosticos [
+^colDiagnostico 
 ]
 
 { #category : #propio }
@@ -130,6 +145,11 @@ colMonodrogas := OrderedCollection new.
 colAplicaciones := OrderedCollection new.
 colTurnos := OrderedCollection new.
 
+]
+
+{ #category : #visualizer }
+Veterinaria >> monodrogas [
+^colMonodrogas 
 ]
 
 { #category : #visualizer }
