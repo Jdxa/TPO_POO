@@ -172,8 +172,48 @@ VentanaPrincipal >> asignarTratamiento [
 
 { #category : #botones }
 VentanaPrincipal >> cancelarTurno [
+    | texto numeroTexto numero turno |
 
-	UIManager default inform: 'Cancelar Turno'
+    modelo turnos isEmpty ifTrue: [
+        UIManager default inform: 'No hay turnos registrados'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        modelo turnos withIndexDo: [ :unTurno :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - Fecha: ';
+                nextPutAll: unTurno fecha asString;
+                nextPutAll: ' - Hora: ';
+                nextPutAll: unTurno hora asString;
+                nextPutAll: ' - Estado: ';
+                nextPutAll: unTurno estado;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
+
+    numeroTexto := UIManager default request:
+        'Ingrese el numero del turno que desea cancelar'.
+
+    numeroTexto ifNil: [ ^ self ].
+
+    numero := numeroTexto asNumber.
+
+    (numero isInteger and: [
+        numero >= 1 and: [ numero <= modelo turnos size ]
+    ]) ifFalse: [
+        UIManager default inform: 'Numero de turno invalido'.
+        ^ self
+    ].
+
+    turno := modelo turnos at: numero.
+
+    turno estado: 'Cancelado'.
+
+    UIManager default inform: 'Turno cancelado correctamente'.
 ]
 
 { #category : #initialize }
@@ -231,8 +271,54 @@ VentanaPrincipal >> consultarTratamientos [
 
 { #category : #botones }
 VentanaPrincipal >> consultarTurnos [
+    | texto |
 
-	UIManager default inform: 'Consultar turnos'
+    modelo turnos isEmpty ifTrue: [
+        UIManager default inform: 'No hay turnos registrados'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        modelo turnos do: [ :unTurno |
+
+            stream
+                nextPutAll: 'Cliente: ';
+                nextPutAll: unTurno cliente nombre;
+                space;
+                nextPutAll: unTurno cliente apellido;
+                cr;
+
+                nextPutAll: 'Mascota: ';
+                nextPutAll: unTurno mascota nombreMascota;
+                cr;
+
+                nextPutAll: 'Veterinario: ';
+                nextPutAll: unTurno veterinario nombre;
+                space;
+                nextPutAll: unTurno veterinario apellido;
+                cr;
+
+                nextPutAll: 'Fecha: ';
+                nextPutAll: unTurno fecha asString;
+                cr;
+
+                nextPutAll: 'Hora: ';
+                nextPutAll: unTurno hora asString;
+                cr;
+
+                nextPutAll: 'Motivo: ';
+                nextPutAll: unTurno motivo;
+                cr;
+
+                nextPutAll: 'Estado: ';
+                nextPutAll: unTurno estado;
+                cr;
+                nextPutAll: '-----------------------------';
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
 ]
 
 { #category : #botones }
