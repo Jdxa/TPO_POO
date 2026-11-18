@@ -52,13 +52,17 @@ Quirurgico class >> tablaRiesgos [
 
 { #category : #propio }
 Quirurgico >> costoTot [
-	|subTotal totalAnestesia porcentajeRiesgo|
-	totalAnestesia := Dictionary new at: 'General' put: 100000; at: 'Regional' put: 60000; at: 'Local' put: 30000;at: tipoAnestesia ifAbsent: [0].
-	subTotal := CostoBase + totalAnestesia.
+
+	| subTotal totalAnestesia porcentajeRiesgo |
+	totalAnestesia := Dictionary new
+		                  at: 'General' put: 100000;
+		                  at: 'Regional' put: 60000;
+		                  at: 'Local' put: 30000;
+		                  at: tipoAnestesia ifAbsent: [ 0 ].
+	subTotal := Tratamiento costoBase + totalAnestesia.
 	porcentajeRiesgo := TablaRiesgos at: nivelRiesgo ifAbsent: [ 0 ].
-	
-	^ subTotal * (1 + (porcentajeRiesgo / 100)) 
-	
+
+	^ subTotal * (1 + (porcentajeRiesgo / 100))
 ]
 
 { #category : #comparacion }

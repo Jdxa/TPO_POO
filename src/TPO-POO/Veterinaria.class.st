@@ -44,6 +44,11 @@ Veterinaria >> agendarTurno: unTurno [
 ]
 
 { #category : #propio }
+Veterinaria >> agregarAplicacion: unaAplicacion [
+colAplicaciones add: unaAplicacion.
+]
+
+{ #category : #propio }
 Veterinaria >> agregarCliente: unCliente [
  colCliente add: unCliente.
 ]
@@ -67,6 +72,11 @@ Veterinaria >> agregarMonodroga: unaMonodroga [
 { #category : #propio }
 Veterinaria >> agregarVeterinario: unVeterinario [
 	colVeterinario add: unVeterinario.
+]
+
+{ #category : #visualizer }
+Veterinaria >> aplicaciones [
+^colAplicaciones 
 ]
 
 { #category : #visualizer }
@@ -112,19 +122,18 @@ Veterinaria >> generarFactura: unDiagnostico [
 	| existe cliente montoTotal unaFactura |
 	existe := colFacturas anySatisfy: [ :factura |
 		          unDiagnostico = factura getDiagnostico ].
-	existe
-		ifTrue: [ ^ self ]
-		ifFalse: [
-			cliente := self buscarCliente: unDiagnostico getMascota.
-			montoTotal := unDiagnostico calcularCosto.
-			unaFactura := Factura
-				              crearCliente: cliente
-				              cuit: cuit
-				              diagnostico: unDiagnostico
-				              montoTotal: montoTotal
-				              fechaGen: Date today
-										estadoPagado: false.
-			colFacturas add: unaFactura ]
+	existe ifTrue: [ ^ nil ].
+	cliente := self buscarCliente: unDiagnostico getMascota.
+	montoTotal := unDiagnostico calcularCosto.
+	unaFactura := Factura
+		              crearCliente: cliente
+		              cuit: cuit
+		              diagnostico: unDiagnostico
+		              montoTotal: montoTotal
+		              fechaGen: Date today
+		              estadoPagado: false.
+	colFacturas add: unaFactura.
+	^unaFactura 
 ]
 
 { #category : #propio }

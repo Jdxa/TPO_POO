@@ -305,6 +305,83 @@ VentanaPrincipal >> cancelarTurno [
     UIManager default inform: 'Turno cancelado correctamente'.
 ]
 
+{ #category : #test }
+VentanaPrincipal >> cargarClientesPrueba [
+    | cliente1 cliente2 cliente3
+      mascota11 mascota21 mascota22 mascota31 |
+
+    "CLIENTE 1"
+    cliente1 := Cliente
+        crearNroDni: '35111222'
+        nombre: 'Carlos'
+        apellido: 'Rodriguez'
+        domicilio: 'San Martin 150'
+        email: 'carlos@mail.com'
+        telefono: '2994001001'.
+
+    mascota11 := Mascota
+        crearNombre: 'Firulais'
+        especie: 'Perro'
+        raza: 'Labrador'
+        fechaNac: (Date year: 2020 month: 3 day: 15)
+        peso: 25.
+
+    cliente1 agregarMascota: mascota11.
+
+
+    "CLIENTE 2"
+    cliente2 := Cliente
+        crearNroDni: '32444555'
+        nombre: 'Laura'
+        apellido: 'Gomez'
+        domicilio: 'Belgrano 250'
+        email: 'laura@mail.com'
+        telefono: '2994001002'.
+
+    mascota21 := Mascota
+        crearNombre: 'Michi'
+        especie: 'Gato'
+        raza: 'Siames'
+        fechaNac: (Date year: 2022 month: 6 day: 10)
+        peso: 5.
+
+    mascota22 := Mascota
+        crearNombre: 'Rocky'
+        especie: 'Perro'
+        raza: 'Ovejero'
+        fechaNac: (Date year: 2019 month: 8 day: 20)
+        peso: 30.
+
+    cliente2 agregarMascota: mascota21.
+    cliente2 agregarMascota: mascota22.
+
+
+    "CLIENTE 3"
+    cliente3 := Cliente
+        crearNroDni: '29888777'
+        nombre: 'Mariana'
+        apellido: 'Lopez'
+        domicilio: 'Mitre 350'
+        email: 'mariana@mail.com'
+        telefono: '2994001003'.
+
+    mascota31 := Mascota
+        crearNombre: 'Luna'
+        especie: 'Perro'
+        raza: 'Caniche'
+        fechaNac: (Date year: 2021 month: 11 day: 5)
+        peso: 8.
+
+    cliente3 agregarMascota: mascota31.
+
+
+    "AGREGAR CLIENTES AL MODELO"
+    modelo agregarCliente: cliente1.
+    modelo agregarCliente: cliente2.
+    modelo agregarCliente: cliente3.
+
+]
+
 { #category : #initialize }
 VentanaPrincipal >> cargarMonodrogasPrueba [
     | monodroga1 monodroga2 |
@@ -323,6 +400,59 @@ VentanaPrincipal >> cargarMonodrogasPrueba [
 
     modelo agregarMonodroga: monodroga1.
     modelo agregarMonodroga: monodroga2.
+]
+
+{ #category : #test }
+VentanaPrincipal >> cargarVacunasPrueba [
+    | vacunaPerro vacunaGato vet1 vet2
+      cliente2 cliente3 mascota21 mascota22 mascota31 |
+
+    vet1 := modelo veterinarios at: 1.
+    vet2 := modelo veterinarios at: 2.
+
+    cliente2 := modelo buscarClientePorDni: '32444555'.
+    cliente3 := modelo buscarClientePorDni: '29888777'.
+
+    mascota21 := cliente2 mascotas at: 1.
+    mascota22 := cliente2 mascotas at: 2.
+    mascota31 := cliente3 mascotas at: 1.
+
+    vacunaPerro := Vacuna
+        crearNombreVac: 'Antirrabica'
+        laboratorio: 'LabVet'
+        especie: 'Perro'
+        vigencia: 365.
+
+    vacunaGato := Vacuna
+        crearNombreVac: 'Triple Felina'
+        laboratorio: 'VetLab'
+        especie: 'Gato'
+        vigencia: 365.
+
+    "MASCOTA 2.1: 1 APLICACION"
+    modelo agregarAplicacion: (Aplicacion
+        crearFecha: (Date year: 2026 month: 1 day: 10)
+        mascota: mascota21
+        veterinario: vet1
+        vacuna: vacunaGato).
+
+    "MASCOTA 2.2: 2 APLICACIONES"
+    1 to: 2 do: [ :i |
+        modelo agregarAplicacion: (Aplicacion
+            crearFecha: (Date year: 2026 month: 2 day: i * 5)
+            mascota: mascota22
+            veterinario: vet2
+            vacuna: vacunaPerro)
+    ].
+
+    "MASCOTA 3.1: 3 APLICACIONES"
+    1 to: 3 do: [ :i |
+        modelo agregarAplicacion: (Aplicacion
+            crearFecha: (Date year: 2026 month: 3 day: i * 5)
+            mascota: mascota31
+            veterinario: vet1
+            vacuna: vacunaPerro)
+    ].
 ]
 
 { #category : #initialize }
@@ -465,8 +595,49 @@ VentanaPrincipal >> crearTratamientoQuirurgicoConFecha: fecha motivo: motivo est
 
 { #category : #botones }
 VentanaPrincipal >> facturarDiagnostico [
+    | texto numero diagnostico factura |
 
-	UIManager default inform: 'Diagnostico facturado'
+    modelo diagnosticos isEmpty ifTrue: [
+        UIManager default inform: 'No hay diagnosticos registrados'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        modelo diagnosticos withIndexDo: [ :unDiagnostico :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - ';
+                nextPutAll: unDiagnostico descripcion;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
+
+    numero := UIManager default request: 'Numero del diagnostico'.
+    numero ifNil: [ ^ self ].
+
+    numero := numero asNumber.
+
+    (numero isInteger and: [
+        numero >= 1 and: [ numero <= modelo diagnosticos size ]
+    ]) ifFalse: [
+        UIManager default inform: 'Numero invalido'.
+        ^ self
+    ].
+
+    diagnostico := modelo diagnosticos at: numero.
+
+    factura := modelo generarFactura: diagnostico.
+
+    factura ifNil: [
+        UIManager default inform: 'Este diagnostico ya tiene una factura'.
+        ^ self
+    ].
+
+    UIManager default inform:
+        'Factura generada correctamente. Importe: $',
+        factura montoTotal asString
 ]
 
 { #category : #initialize }
@@ -475,9 +646,11 @@ VentanaPrincipal >> initialize [
 	super initialize.
 
 	modelo := Veterinaria crearCuit: '20-0000000-0'.
+	Quirurgico iniciarTabla.
 	self cargarVeterinariosPrueba.
 	self cargarMonodrogasPrueba.
-
+	self cargarClientesPrueba.
+	self cargarVacunasPrueba.
 	self extent: 800 @ 600.
 	self color: Color veryLightGray.
 
@@ -488,6 +661,11 @@ VentanaPrincipal >> initialize [
 
 	self actualizarListaClientes.
 	self actualizarCantidadMascotas
+]
+
+{ #category : #test }
+VentanaPrincipal >> modelo [ 
+^modelo
 ]
 
 { #category : #botones }

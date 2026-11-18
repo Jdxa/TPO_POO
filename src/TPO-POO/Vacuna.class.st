@@ -17,6 +17,24 @@ Class {
 	#category : #'TPO-POO'
 }
 
+{ #category : #constructor }
+Vacuna class >> crearNombreVac: unNombreVacuna
+    laboratorio: unLaboratorio
+    especie: unaEspecie
+    vigencia: unaVigencia [
+
+    | unaVacuna |
+
+    unaVacuna := self new.
+    unaVacuna
+        iniciarNombreVac: unNombreVacuna
+        laboratorio: unLaboratorio
+        especie: unaEspecie
+        vigencia: unaVigencia.
+
+    ^ unaVacuna
+]
+
 { #category : #iniciador }
 Vacuna >> iniciarNombreVac: unNombreVacuna laboratorio: unLaboratorio especie: unaEspecie vigencia: unaVigencia [
 	nombreVacuna := unNombreVacuna .

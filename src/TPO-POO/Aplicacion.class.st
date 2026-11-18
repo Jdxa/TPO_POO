@@ -25,10 +25,30 @@ unaAplicacion iniciarFecha: unaFecha mascota: unaMascota veterinario: unVeterina
 ^unaAplicacion  
 ]
 
+{ #category : #visualizer }
+Aplicacion >> fecha [
+^fecha 
+]
+
 { #category : #iniciador }
 Aplicacion >> iniciarFecha: unaFecha mascota: unaMascota veterinario: unVeterinario vacuna: unaVacuna [
 fecha := unaFecha.
 mascota := unaMascota .
 veterinario := unVeterinario .
 vacuna := unaVacuna  
+]
+
+{ #category : #visualizer }
+Aplicacion >> mascota [
+^mascota 
+]
+
+{ #category : #visualizer }
+Aplicacion >> vacuna [ 
+^vacuna 
+]
+
+{ #category : #visualizer }
+Aplicacion >> veterinario [ 
+^veterinario 
 ]
