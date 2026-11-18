@@ -103,6 +103,11 @@ montoAPagar := self montoTotal - self montoAcumulado.
 ^montoAPagar
 ]
 
+{ #category : #accessing }
+Factura >> pagos [
+^colPagos 
+]
+
 { #category : #iniciador }
 Factura >> registrarPago: unPago [
 

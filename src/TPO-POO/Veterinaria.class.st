@@ -117,6 +117,13 @@ Veterinaria >> facturasPendientes [
 ]
 
 { #category : #propio }
+Veterinaria >> facturasPendientesDe: unCliente [
+
+	^ colFacturas  select: [ :factura |
+		  factura cliente = unCliente and: [ factura estaPagada not ] ]
+]
+
+{ #category : #propio }
 Veterinaria >> facturasSinPagar [
 ^colFacturas reject: [ :factura | factura estaPagada  ]
 ]
@@ -167,6 +174,24 @@ Veterinaria >> monodrogas [
 ]
 
 { #category : #propio }
+Veterinaria >> recaudacionDesde: fechaDesde hasta: fechaHasta [
+    | total |
+    total := 0.
+
+    colFacturas do: [ :factura |
+        factura pagos do: [ :pago |
+            (pago fechaPago >= fechaDesde and: [
+                pago fechaPago <= fechaHasta
+            ]) ifTrue: [
+                total := total + pago montoPago
+            ]
+        ]
+    ].
+
+    ^ total
+]
+
+{ #category : #propio }
 Veterinaria >> recaudacionTotal [
     | total |
     total := 0.
@@ -179,9 +204,30 @@ Veterinaria >> recaudacionTotal [
 
 ]
 
+{ #category : #propio }
+Veterinaria >> tratamientosDe: unVeterinario [ 
+    | diagnosticosDelVeterinario |
+
+    diagnosticosDelVeterinario := colDiagnostico select: [ :diagnostico |
+        diagnostico medico = unVeterinario
+    ].
+
+    ^ diagnosticosDelVeterinario flatCollect: [ :diagnostico |
+        diagnostico tratamientos
+    ]
+
+]
+
 { #category : #visualizer }
 Veterinaria >> turnos [ 
 ^colTurnos 
+]
+
+{ #category : #visualizer }
+Veterinaria >> turnosDe: unCliente [
+    ^ colTurnos select: [ :unTurno |
+        unTurno cliente = unCliente
+    ]
 ]
 
 { #category : #visualizer }

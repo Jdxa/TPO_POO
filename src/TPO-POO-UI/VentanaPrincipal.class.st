@@ -118,7 +118,16 @@ VentanaPrincipal >> agregarBotones [
 	self
 		agregarBoton: 'Registrar atencion'
 		accion: #registrarAtencion
-		posicion: 30 @ 450
+		posicion: 30 @ 450.
+	self
+		agregarBoton: 'Tratamientos por veterinario'
+		accion: #consultarTratamientosVeterinario
+		posicion: 230 @ 450.
+
+	self
+		agregarBoton: 'Recaudacion entre fechas'
+		accion: #consultarRecaudacionEntreFechas 
+		posicion: 230 @ 350
 ]
 
 { #category : #initialize }
@@ -580,25 +589,50 @@ VentanaPrincipal >> cerrarVentana [
  self delete.
 ]
 
-{ #category : #botones }
+{ #category : #consultas }
 VentanaPrincipal >> consultarFacturas [ 
-    | pendientes texto |
+    | clientes texto numero cliente pendientes |
 
-    pendientes := modelo facturasPendientes.
+    clientes := modelo clientes.
+
+    texto := String streamContents: [ :stream |
+        clientes withIndexDo: [ :unCliente :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - ';
+                nextPutAll: unCliente nombre asString;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
+
+    numero := UIManager default request: 'Numero del cliente'.
+    numero ifNil: [ ^ self ].
+    numero := numero asNumber.
+
+    (numero isInteger and: [
+        numero >= 1 and: [ numero <= clientes size ]
+    ]) ifFalse: [
+        UIManager default inform: 'Numero invalido'.
+        ^ self
+    ].
+
+    cliente := clientes at: numero.
+    pendientes := modelo facturasPendientesDe: cliente.
 
     pendientes isEmpty ifTrue: [
-        UIManager default inform: 'No hay facturas pendientes'.
+        UIManager default inform: 'El cliente no tiene facturas pendientes'.
         ^ self
     ].
 
     texto := String streamContents: [ :stream |
-        pendientes withIndexDo: [ :datos :indice |
+        pendientes do: [ :factura |
             stream
-                nextPutAll: indice asString;
-                nextPutAll: ' - Cliente: ';
-                nextPutAll: datos first asString;
+                nextPutAll: 'Diagnostico: ';
+                nextPutAll: factura getDiagnostico descripcion;
                 nextPutAll: ' - Saldo pendiente: $';
-                nextPutAll: datos second asString;
+                nextPutAll: factura pagoPendiente asString;
                 cr
         ]
     ].
@@ -608,27 +642,158 @@ VentanaPrincipal >> consultarFacturas [
 
 ]
 
-{ #category : #botones }
+{ #category : #consultas }
 VentanaPrincipal >> consultarHistorial [
 
 	UIManager default inform: 'Historial consultado'
 ]
 
+{ #category : #consultas }
+VentanaPrincipal >> consultarHistorialTurnosCliente [
+    | clientes texto numero cliente turnos |
+    clientes := modelo clientes.
+
+    texto := String streamContents: [ :stream |
+        clientes withIndexDo: [ :unCliente :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - ';
+                nextPutAll: unCliente nombre asString;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
+
+    numero := UIManager default request: 'Numero del cliente'.
+    numero ifNil: [ ^ self ].
+    numero := numero asNumber.
+
+    (numero isInteger and: [
+        numero >= 1 and: [ numero <= clientes size ]
+    ]) ifFalse: [
+        UIManager default inform: 'Numero invalido'.
+        ^ self
+    ].
+
+    cliente := clientes at: numero.
+    turnos := modelo turnosDe: cliente.
+
+    turnos isEmpty ifTrue: [
+        UIManager default inform: 'El cliente no tiene turnos registrados'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        turnos do: [ :unTurno |
+            stream
+                nextPutAll: 'Fecha: ';
+                nextPutAll: unTurno fecha asString;
+                nextPutAll: ' - Hora: ';
+                nextPutAll: unTurno hora asString;
+                nextPutAll: ' - Estado: ';
+                nextPutAll: unTurno estado;
+                nextPutAll: ' - Motivo: ';
+                nextPutAll: unTurno motivo;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto
+
+]
+
 { #category : #botones }
-VentanaPrincipal >> consultarRecaudacion [
+VentanaPrincipal >> consultarRecaudacion [ 
     | total |
 
     total := modelo recaudacionTotal.
 
     UIManager default inform:
         'Recaudacion total: $', total asString
+]
 
+{ #category : #botones }
+VentanaPrincipal >> consultarRecaudacionEntreFechas [
+
+	| desde hasta total |
+	desde := UIManager default request: 'Fecha desde (dd/mm/aaaa)'.
+	desde ifNil: [ ^ self ].
+
+	hasta := UIManager default request: 'Fecha hasta (dd/mm/aaaa)'.
+	hasta ifNil: [ ^ self ].
+
+	desde := Date
+    year: (desde copyFrom: 7 to: 10) asNumber
+    month: (desde copyFrom: 4 to: 5) asNumber
+    day: (desde copyFrom: 1 to: 2) asNumber.
+
+hasta := Date
+    year: (hasta copyFrom: 7 to: 10) asNumber
+    month: (hasta copyFrom: 4 to: 5) asNumber
+    day: (hasta copyFrom: 1 to: 2) asNumber.
+	desde > hasta ifTrue: [
+		UIManager default inform:
+			'La fecha inicial no puede ser posterior a la final'.
+		^ self ].
+
+	total := modelo recaudacionDesde: desde hasta: hasta.
+
+	UIManager default inform:
+		'Recaudacion entre las fechas indicadas: $' , total asString
 ]
 
 { #category : #botones }
 VentanaPrincipal >> consultarTratamientos [
 
 	UIManager default inform: 'Tratamientos consultados'
+]
+
+{ #category : #botones }
+VentanaPrincipal >> consultarTratamientosVeterinario [ 
+    | texto numero veterinario tratamientos |
+
+    texto := String streamContents: [ :stream |
+        modelo veterinarios withIndexDo: [ :vet :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - ';
+                nextPutAll: vet nombre asString;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
+
+    numero := UIManager default request: 'Numero del veterinario'.
+    numero ifNil: [ ^ self ].
+    numero := numero asNumber.
+
+    (numero isInteger and: [
+        numero >= 1 and: [ numero <= modelo veterinarios size ]
+    ]) ifFalse: [
+        UIManager default inform: 'Numero invalido'.
+        ^ self
+    ].
+
+    veterinario := modelo veterinarios at: numero.
+    tratamientos := modelo tratamientosDe: veterinario.
+
+    tratamientos isEmpty ifTrue: [
+        UIManager default inform: 'Este veterinario no tiene tratamientos registrados'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        tratamientos do: [ :tratamiento |
+            stream
+                nextPutAll: tratamiento motivo asString;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto
+
 ]
 
 { #category : #botones }
