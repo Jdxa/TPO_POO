@@ -581,9 +581,31 @@ VentanaPrincipal >> cerrarVentana [
 ]
 
 { #category : #botones }
-VentanaPrincipal >> consultarFacturas [
+VentanaPrincipal >> consultarFacturas [ 
+    | pendientes texto |
 
-	UIManager default inform: 'Facturas consultadas'
+    pendientes := modelo facturasPendientes.
+
+    pendientes isEmpty ifTrue: [
+        UIManager default inform: 'No hay facturas pendientes'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        pendientes withIndexDo: [ :datos :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - Cliente: ';
+                nextPutAll: datos first asString;
+                nextPutAll: ' - Saldo pendiente: $';
+                nextPutAll: datos second asString;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto
+
+
 ]
 
 { #category : #botones }
@@ -594,8 +616,13 @@ VentanaPrincipal >> consultarHistorial [
 
 { #category : #botones }
 VentanaPrincipal >> consultarRecaudacion [
+    | total |
 
-	UIManager default inform: 'Recaudacion consultada'
+    total := modelo recaudacionTotal.
+
+    UIManager default inform:
+        'Recaudacion total: $', total asString
+
 ]
 
 { #category : #botones }
@@ -908,9 +935,67 @@ VentanaPrincipal >> registrarMascota [
 ]
 
 { #category : #botones }
-VentanaPrincipal >> registrarPago [
+VentanaPrincipal >> registrarPago [ 
+    | facturas texto numero factura monto medio pago |
 
-	UIManager default inform: 'Pago registrado'
+    facturas := modelo facturasSinPagar.
+
+    facturas isEmpty ifTrue: [
+        UIManager default inform: 'No hay facturas pendientes'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        facturas withIndexDo: [ :unaFactura :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - ';
+                nextPutAll: unaFactura cliente asString;
+                nextPutAll: ' - Pendiente: $';
+                nextPutAll: unaFactura pagoPendiente asString;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
+
+    numero := UIManager default request: 'Numero de factura'.
+    numero ifNil: [ ^ self ].
+    numero := numero asNumber.
+
+    (numero isInteger and: [
+        numero >= 1 and: [ numero <= facturas size ]
+    ]) ifFalse: [
+        UIManager default inform: 'Numero invalido'.
+        ^ self
+    ].
+
+    factura := facturas at: numero.
+
+    monto := UIManager default request: 'Ingrese el monto del pago'.
+    monto ifNil: [ ^ self ].
+    monto := monto asNumber.
+
+    medio := UIManager default
+        chooseFrom: #('Efectivo' 'Credito' 'Billetera')
+        values: #('Efectivo' 'Credito' 'Billetera')
+        title: 'Seleccione el medio de pago'.
+
+    medio ifNil: [ ^ self ].
+
+    pago := Pago crearFecha: Date today montoPago: monto.
+    pago medioPago: medio.
+
+    factura registrarPago: pago.
+
+    UIManager default inform:
+        (factura estaPagada
+            ifTrue: [ 'Factura pagada completamente' ]
+            ifFalse: [
+                'Pago registrado. Saldo pendiente: $',
+                factura pagoPendiente asString
+            ])
+
 ]
 
 { #category : #botones }

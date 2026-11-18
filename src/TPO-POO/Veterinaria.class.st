@@ -117,6 +117,11 @@ Veterinaria >> facturasPendientes [
 ]
 
 { #category : #propio }
+Veterinaria >> facturasSinPagar [
+^colFacturas reject: [ :factura | factura estaPagada  ]
+]
+
+{ #category : #propio }
 Veterinaria >> generarFactura: unDiagnostico [
 
 	| existe cliente montoTotal unaFactura |
@@ -159,6 +164,19 @@ colTurnos := OrderedCollection new.
 { #category : #visualizer }
 Veterinaria >> monodrogas [
 ^colMonodrogas 
+]
+
+{ #category : #propio }
+Veterinaria >> recaudacionTotal [
+    | total |
+    total := 0.
+
+    colFacturas do: [ :factura |
+        total := total + factura montoAcumulado
+    ].
+
+    ^ total
+
 ]
 
 { #category : #visualizer }
