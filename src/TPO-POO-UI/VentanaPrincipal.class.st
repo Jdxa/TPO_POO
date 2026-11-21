@@ -91,8 +91,8 @@ VentanaPrincipal >> agregarBotones [
 		accion: #consultarHistorial
 		posicion: 30 @ 300.
 	self
-		agregarBoton: 'Consultar tratamientos'
-		accion: #consultarTratamientos
+		agregarBoton: 'Trats. por veterinario'
+		accion: #consultarTratamientosVeterinario 
 		posicion: 230 @ 300.
 
 	self
@@ -119,11 +119,6 @@ VentanaPrincipal >> agregarBotones [
 		agregarBoton: 'Registrar atencion'
 		accion: #registrarAtencion
 		posicion: 30 @ 450.
-	self
-		agregarBoton: 'Trats. por veterinario'
-		accion: #consultarTratamientosVeterinario
-		posicion: 230 @ 450.
-
 	self
 		agregarBoton: 'Recaudacion entre fechas'
 		accion: #consultarRecaudacionEntreFechas
@@ -1026,8 +1021,62 @@ VentanaPrincipal >> modelo [
 
 { #category : #botones }
 VentanaPrincipal >> registrarAtencion [
+    | texto numeroTexto numero turno |
 
-	UIManager default inform: 'Registrar atencion'
+    modelo turnos isEmpty ifTrue: [
+        UIManager default inform: 'No hay turnos registrados'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        modelo turnos withIndexDo: [ :unTurno :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - Fecha: ';
+                nextPutAll: unTurno fecha asString;
+                nextPutAll: ' - Hora: ';
+                nextPutAll: unTurno hora asString;
+                nextPutAll: ' - Estado: ';
+                nextPutAll: unTurno estado;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
+
+    numeroTexto := UIManager default request:
+        'Ingrese el numero del turno atendido'.
+
+    numeroTexto ifNil: [ ^ self ].
+    numero := numeroTexto asNumber.
+
+    (numero isInteger and: [
+        numero >= 1 and: [ numero <= modelo turnos size ]
+    ]) ifFalse: [
+        UIManager default inform: 'Numero de turno invalido'.
+        ^ self
+    ].
+
+    turno := modelo turnos at: numero.
+
+    turno estado = 'Cancelado' ifTrue: [
+        UIManager default inform: 'No se puede atender un turno cancelado'.
+        ^ self
+    ].
+
+    turno estado = 'Atendido' ifTrue: [
+        UIManager default inform: 'Este turno ya fue atendido'.
+        ^ self
+    ].
+
+    turno estado: 'Atendido'.
+
+    (turno isKindOf: TurnoTratamiento) ifTrue: [
+        turno tratamiento estado: 'Realizado'
+    ].
+
+    UIManager default inform: 'Atencion registrada correctamente'.
+
 ]
 
 { #category : #botones }
@@ -1233,7 +1282,7 @@ VentanaPrincipal >> registrarPago [
 { #category : #botones }
 VentanaPrincipal >> solicitarTurno [
 
-	| dniCliente cliente nombreMascota mascota dniVeterinario veterinario fechaTexto fecha hora motivo nuevoTurno exito partes |
+	| dniCliente cliente nombreMascota mascota dniVeterinario veterinario fechaTexto fecha hora motivo tipo nuevoTurno exito tratamientos texto numero tratamiento partes |
 	dniCliente := UIManager default request: 'DNI del cliente'.
 	dniCliente ifNil: [ ^ self ].
 
@@ -1249,9 +1298,18 @@ VentanaPrincipal >> solicitarTurno [
 		           detect: [ :unaMascota |
 		           unaMascota nombreMascota = nombreMascota ]
 		           ifNone: [ nil ].
+
 	mascota ifNil: [
-		UIManager default inform: 'El cliente no tiene mascota'.
+		UIManager default inform: 'El cliente no tiene esa mascota'.
 		^ self ].
+
+	tipo := UIManager default
+		        chooseFrom: #( 'Consulta' 'Tratamiento' )
+		        values: #( 'Consulta' 'Tratamiento' )
+		        title: 'Tipo de turno'.
+
+	tipo ifNil: [ ^ self ].
+
 	dniVeterinario := UIManager default request: 'DNI del veterinario'.
 	dniVeterinario ifNil: [ ^ self ].
 
@@ -1259,6 +1317,7 @@ VentanaPrincipal >> solicitarTurno [
 		               detect: [ :unVeterinario |
 		               unVeterinario nroDoc = dniVeterinario ]
 		               ifNone: [ nil ].
+
 	veterinario ifNil: [
 		UIManager default inform: 'No existe ese veterinario'.
 		^ self ].
@@ -1272,19 +1331,60 @@ VentanaPrincipal >> solicitarTurno [
 		         day: (partes at: 1) asNumber.
 	hora := UIManager default request: 'Hora'.
 	hora ifNil: [ ^ self ].
-
 	motivo := UIManager default request: 'Motivo del turno'.
 	motivo ifNil: [ ^ self ].
 
-	nuevoTurno := Turno
-		              crearFecha: fecha
-		              hora: hora
-		              estado: 'Pendiente'
-		              motivo: motivo
-		              cliente: cliente
-		              veterinario: veterinario
-		              mascota: mascota.
+	tipo = 'Consulta'
+		ifTrue: [
+			nuevoTurno := Turno
+				              crearFecha: fecha
+				              hora: hora
+				              estado: 'Pendiente'
+				              motivo: motivo
+				              cliente: cliente
+				              veterinario: veterinario
+				              mascota: mascota ]
+		ifFalse: [
+			tratamientos := modelo tratamientosPendientesDe: mascota.
+
+			tratamientos isEmpty ifTrue: [
+				UIManager default inform:
+					'La mascota no tiene tratamientos pendientes'.
+				^ self ].
+
+			texto := String streamContents: [ :stream |
+				         tratamientos withIndexDo: [ :unTratamiento :indice |
+					         stream
+						         nextPutAll: indice asString;
+						         nextPutAll: ' - ';
+						         nextPutAll: unTratamiento motivo;
+						         cr ] ].
+
+			UIManager default inform: texto.
+
+			numero := UIManager default request: 'Numero del tratamiento'.
+			numero ifNil: [ ^ self ].
+			numero := numero asNumber.
+
+			(numero isInteger and: [
+				 numero >= 1 and: [ numero <= tratamientos size ] ]) ifFalse: [
+				UIManager default inform: 'Numero de tratamiento invalido'.
+				^ self ].
+
+			tratamiento := tratamientos at: numero.
+
+			nuevoTurno := TurnoTratamiento
+				              crearFecha: fecha
+				              hora: hora
+				              estado: 'Pendiente'
+				              motivo: motivo
+				              cliente: cliente
+				              veterinario: veterinario
+				              mascota: mascota
+				              tratamiento: tratamiento ].
+	UIManager default inform: (nuevoTurno verificarTurno: modelo turnos) asString.
 	exito := modelo agendarTurno: nuevoTurno.
+
 	exito
 		ifTrue: [ UIManager default inform: 'Turno agendado correctamente' ]
 		ifFalse: [

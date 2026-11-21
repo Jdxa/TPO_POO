@@ -49,10 +49,26 @@ Tratamiento >> esTratValido [
 	^ fecha dayOfWeek between: 2 and: 6
 ]
 
+{ #category : #accessing }
+Tratamiento >> estado [
+	^estado 
+]
+
+{ #category : #accessing }
+Tratamiento >> estado: unEstado [
+
+estado := unEstado 
+]
+
 { #category : #iniciador }
 Tratamiento >> iniciarFecha: unaFecha motivo: unMotivo estado: unEstado [
 
 	fecha := unaFecha.
 	motivo := unMotivo.
 	estado := unEstado.
+]
+
+{ #category : #accessing }
+Tratamiento >> motivo [ 
+^motivo
 ]

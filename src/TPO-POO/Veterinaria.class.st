@@ -105,6 +105,11 @@ Veterinaria >> diagnosticos [
 ]
 
 { #category : #propio }
+Veterinaria >> diagnosticosDe: unaMascota [
+ ^colDiagnostico select: [ :unDiagnostico| unDiagnostico getMascota = unaMascota  ]
+]
+
+{ #category : #propio }
 Veterinaria >> facturasPendientes [
 
 	| pendientes |
@@ -216,6 +221,16 @@ Veterinaria >> tratamientosDe: unVeterinario [
         diagnostico tratamientos
     ]
 
+]
+
+{ #category : #propio }
+Veterinaria >> tratamientosPendientesDe: unaMascota [
+    ^ (self diagnosticosDe: unaMascota)
+        flatCollect: [ :unDiagnostico |
+            unDiagnostico tratamientos select: [ :unTratamiento |
+                unTratamiento estado = 'Pendiente'
+            ]
+        ]
 ]
 
 { #category : #visualizer }
