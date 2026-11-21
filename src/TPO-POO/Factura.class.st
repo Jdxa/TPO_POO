@@ -95,6 +95,12 @@ Factura >> montoTotal [
 	^ montoTotal
 ]
 
+{ #category : #accessing }
+Factura >> montoTotal: unMonto [
+
+	montoTotal := unMonto.
+]
+
 { #category : #propio }
 Factura >> pagoPendiente [
 |montoAPagar|

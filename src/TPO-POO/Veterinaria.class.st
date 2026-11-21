@@ -224,6 +224,11 @@ Veterinaria >> turnos [
 ]
 
 { #category : #visualizer }
+Veterinaria >> turnosCanceladosDe: unCliente [
+^(self turnosDe: unCliente ) select: [ :unTurno | unTurno estado = 'Cancelado' ].
+]
+
+{ #category : #visualizer }
 Veterinaria >> turnosDe: unCliente [
     ^ colTurnos select: [ :unTurno |
         unTurno cliente = unCliente

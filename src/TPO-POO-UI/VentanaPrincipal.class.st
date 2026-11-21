@@ -120,7 +120,7 @@ VentanaPrincipal >> agregarBotones [
 		accion: #registrarAtencion
 		posicion: 30 @ 450.
 	self
-		agregarBoton: 'Tratamientos por veterinario'
+		agregarBoton: 'Trats. por veterinario'
 		accion: #consultarTratamientosVeterinario
 		posicion: 230 @ 450.
 
@@ -131,7 +131,11 @@ VentanaPrincipal >> agregarBotones [
 	self
 		agregarBoton: 'Historial turnos cliente'
 		accion: #consultarHistorialTurnosCliente
-		posicion: 430 @ 350
+		posicion: 430 @ 350.
+	self
+		agregarBoton: 'Turnos cancelados'
+		accion: #consultarTurnosCanceladosCliente
+		posicion: 430 @ 450
 ]
 
 { #category : #initialize }
@@ -181,7 +185,7 @@ self addMorph:  titulo.
 { #category : #botones }
 VentanaPrincipal >> asignarTratamiento [
 
-	| diagnosticoTexto numero diagnostico tipo fechaTexto fecha motivo estado tratamiento nombreMono monodroga dosisTexto frecuencia partes|
+	| diagnosticoTexto numero diagnostico tipo fechaTexto fecha motivo estado tratamiento nombreMono monodroga dosisTexto frecuencia partes |
 	modelo diagnosticos isEmpty ifTrue: [
 		UIManager default inform: 'No hay diagnosticos registrados'.
 		^ self ].
@@ -221,7 +225,10 @@ VentanaPrincipal >> asignarTratamiento [
 	fechaTexto := UIManager default request: 'Fecha (DD/MM/AAA)'.
 	fechaTexto ifNil: [ ^ self ].
 	partes := fechaTexto substrings: '/'.
-	fecha := Date year: (partes at: 3)asNumber month: (partes at: 2)asNumber day:  (partes at: 1)asNumber .
+	fecha := Date
+		         year: (partes at: 3) asNumber
+		         month: (partes at: 2) asNumber
+		         day: (partes at: 1) asNumber.
 
 	motivo := UIManager default request: 'Motivo del tratamiento'.
 	motivo ifNil: [ ^ self ].
@@ -267,9 +274,13 @@ VentanaPrincipal >> asignarTratamiento [
 				               estado: estado.
 			tratamiento ifNil: [ ^ self ] ].
 
-	diagnostico agregarTratamiento: tratamiento.
-
-	UIManager default inform: 'Tratamiento asignado correctamente'
+	(diagnostico agregarTratamiento: tratamiento)
+		ifTrue: [
+			UIManager default inform:
+				'Tratamiento asignado correctamente. Costo total del diagnostico: $'
+				, diagnostico calcularCosto asString ]
+		ifFalse: [ 	UIManager default inform:
+		'Tratamiento no es valido para la fecha o las condiciones indicadas' ]
 ]
 
 { #category : #botones }
@@ -852,6 +863,58 @@ VentanaPrincipal >> consultarTurnos [
     UIManager default inform: texto.
 ]
 
+{ #category : #consultas }
+VentanaPrincipal >> consultarTurnosCanceladosCliente [
+    | clientes texto numero cliente turnos |
+    clientes := modelo clientes.
+
+    texto := String streamContents: [ :stream |
+        clientes withIndexDo: [ :unCliente :indice |
+            stream
+                nextPutAll: indice asString;
+                nextPutAll: ' - ';
+                nextPutAll: unCliente nombre asString;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto.
+
+    numero := UIManager default request: 'Numero del cliente'.
+    numero ifNil: [ ^ self ].
+    numero := numero asNumber.
+
+    (numero isInteger and: [
+        numero >= 1 and: [ numero <= clientes size ]
+    ]) ifFalse: [
+        UIManager default inform: 'Numero invalido'.
+        ^ self
+    ].
+
+    cliente := clientes at: numero.
+    turnos := modelo turnosCanceladosDe: cliente.
+
+    turnos isEmpty ifTrue: [
+        UIManager default inform: 'El cliente no tiene turnos cancelados'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        turnos do: [ :unTurno |
+            stream
+                nextPutAll: 'Fecha: ';
+                nextPutAll: unTurno fecha asString;
+                nextPutAll: ' - Hora: ';
+                nextPutAll: unTurno hora asString;
+                nextPutAll: ' - Motivo: ';
+                nextPutAll: unTurno motivo;
+                cr
+        ]
+    ].
+
+    UIManager default inform: texto
+]
+
 { #category : #aux }
 VentanaPrincipal >> crearTratamientoQuirurgicoConFecha: fecha motivo: motivo estado: estado [
     | nombre nivelTexto nivel anestesia |
@@ -1004,7 +1067,7 @@ VentanaPrincipal >> registrarCliente [
 { #category : #botones }
 VentanaPrincipal >> registrarDiagnostico [
 
-	| dniCliente cliente nombreMascota mascota dniVeterinario veterinario fechaTexto fecha descripcion nuevoDiagnostico |
+	| dniCliente cliente nombreMascota mascota dniVeterinario veterinario fechaTexto fecha descripcion nuevoDiagnostico partes |
 	dniCliente := UIManager default request: 'DNI del cliente'.
 	dniCliente ifNil: [ ^ self ].
 
@@ -1038,13 +1101,13 @@ VentanaPrincipal >> registrarDiagnostico [
 		UIManager default inform: 'No existe ese veterinario'.
 		^ self ].
 
-	fechaTexto := UIManager default request:
-		              'Fecha del diagnostico (DD-MM-AAAA)'.
+	fechaTexto := UIManager default request: 'Fecha (DD/MM/AAA)'.
 	fechaTexto ifNil: [ ^ self ].
-
-	fecha := Date readFrom: fechaTexto readStream.
-
-	descripcion := UIManager default request:
+	partes := fechaTexto substrings: '/'.
+	fecha := Date
+		         year: (partes at: 3) asNumber
+		         month: (partes at: 2) asNumber
+		         day: (partes at: 1) asNumber.	descripcion := UIManager default request:
 		               'Descripcion del diagnostico'.
 	descripcion ifNil: [ ^ self ].
 
@@ -1170,7 +1233,7 @@ VentanaPrincipal >> registrarPago [
 { #category : #botones }
 VentanaPrincipal >> solicitarTurno [
 
-	| dniCliente cliente nombreMascota mascota dniVeterinario veterinario fechaTexto fecha hora motivo nuevoTurno exito |
+	| dniCliente cliente nombreMascota mascota dniVeterinario veterinario fechaTexto fecha hora motivo nuevoTurno exito partes |
 	dniCliente := UIManager default request: 'DNI del cliente'.
 	dniCliente ifNil: [ ^ self ].
 
@@ -1200,9 +1263,13 @@ VentanaPrincipal >> solicitarTurno [
 		UIManager default inform: 'No existe ese veterinario'.
 		^ self ].
 
-	fechaTexto := UIManager default request: 'Fecha (DD/MM/AAAA)'.
+	fechaTexto := UIManager default request: 'Fecha (DD/MM/AAA)'.
 	fechaTexto ifNil: [ ^ self ].
-	fecha := Date readFrom: fechaTexto readStream.
+	partes := fechaTexto substrings: '/'.
+	fecha := Date
+		         year: (partes at: 3) asNumber
+		         month: (partes at: 2) asNumber
+		         day: (partes at: 1) asNumber.
 	hora := UIManager default request: 'Hora'.
 	hora ifNil: [ ^ self ].
 
@@ -1222,5 +1289,5 @@ VentanaPrincipal >> solicitarTurno [
 		ifTrue: [ UIManager default inform: 'Turno agendado correctamente' ]
 		ifFalse: [
 			UIManager default inform:
-				'No se pudo agendar el turno. Verifique la disponibilidad y las condiciones' ].
+				'No se pudo agendar el turno. Verifique la disponibilidad y las condiciones' ]
 ]
