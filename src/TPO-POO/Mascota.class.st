@@ -55,3 +55,22 @@ Mascota >> iniciarNombre: unNombreMascota especie: unaEspecie raza: unaRaza fech
 Mascota >> nombreMascota [
 	^nombreMascota 
 ]
+
+{ #category : #propio }
+Mascota >> ultimaAplicacion: unaVacuna [
+
+    | ultima |
+    ultima := nil.
+
+    colAplicaciones do: [ :unaAplicacion |
+        (unaAplicacion vacunaPertenece: unaVacuna) ifTrue: [
+            (ultima isNil or: [
+                unaAplicacion fecha > ultima fecha
+            ]) ifTrue: [
+                ultima := unaAplicacion
+            ]
+        ]
+    ].
+
+    ^ ultima
+]

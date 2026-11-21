@@ -36,6 +36,11 @@ Aplicacion class >> crearFecha: unaFecha veterinario: unVeterinario vacuna: unaV
 	^ unaAplicacion
 ]
 
+{ #category : #propio }
+Aplicacion >> estaVencida [
+^vacuna vencio: fecha
+]
+
 { #category : #visualizer }
 Aplicacion >> fecha [
 ^fecha 
@@ -52,6 +57,11 @@ Aplicacion >> iniciarFecha: unaFecha veterinario: unVeterinario vacuna: unaVacun
 { #category : #visualizer }
 Aplicacion >> vacuna [ 
 ^vacuna 
+]
+
+{ #category : #propio }
+Aplicacion >> vacunaPertenece: unaVacuna [
+	^vacuna mismaVacuna: unaVacuna 
 ]
 
 { #category : #visualizer }

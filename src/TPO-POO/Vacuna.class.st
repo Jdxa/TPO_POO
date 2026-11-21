@@ -45,7 +45,18 @@ Vacuna >> iniciarNombreVac: unNombreVacuna laboratorio: unLaboratorio especie: u
 	
 ]
 
+{ #category : #propio }
+Vacuna >> mismaVacuna: unaVacuna [
+ ^ nombreVacuna = unaVacuna nombreVacuna
+]
+
 { #category : #accesing }
 Vacuna >> nombreVacuna [
 ^nombreVacuna 
+]
+
+{ #category : #propio }
+Vacuna >> vencio: fechaAplicacion [
+
+	^ Date today >= (fechaAplicacion addDays: vigencia )
 ]

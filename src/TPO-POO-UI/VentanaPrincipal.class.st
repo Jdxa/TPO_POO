@@ -548,16 +548,12 @@ VentanaPrincipal >> cargarVacunasPrueba [
 			 veterinario: vet1
 			 vacuna: vacunaGato).
 
-mascota22 agregarAplicacion: (Aplicacion
-				 crearFecha: (Date year: 2026 month: 2 day:5)
-				 veterinario: vet2
-				 vacuna: vacunaPerro).
-
-	mascota31 agregarAplicacion: (Aplicacion
-			 crearFecha: (Date year: 2026 month: 3 day: 5)
-			 veterinario: vet1
+	mascota22 agregarAplicacion: (Aplicacion
+			 crearFecha: (Date year: 2026 month: 2 day: 5)
+			 veterinario: vet2
 			 vacuna: vacunaPerro).
-	mascota31 agregarAplicacion: (Aplicacion
+
+		mascota31 agregarAplicacion: (Aplicacion
 			 crearFecha: (Date year: 2024 month: 3 day: 5)
 			 veterinario: vet1
 			 vacuna: vacunaPerro)
@@ -1044,6 +1040,7 @@ VentanaPrincipal >> initialize [
 	self cargarMonodrogasPrueba.
 	self cargarClientesPrueba.
 	self cargarVacunasPrueba.
+	UIManager default inform: 'Mascotas con vacunas vencidas: ', (modelo mascotasConVacunasVencidas size)asString .
 	self cargarDiagnosticosPrueba.
 	self extent: 800 @ 600.
 	self color: Color veryLightGray.
@@ -1064,7 +1061,7 @@ VentanaPrincipal >> modelo [
 
 { #category : #botones }
 VentanaPrincipal >> registrarAtencion [
-    | texto numeroTexto numero turno |
+    | texto numeroTexto numero turno presencia |
 
     modelo turnos isEmpty ifTrue: [
         UIManager default inform: 'No hay turnos registrados'.
@@ -1088,7 +1085,7 @@ VentanaPrincipal >> registrarAtencion [
     UIManager default inform: texto.
 
     numeroTexto := UIManager default request:
-        'Ingrese el numero del turno atendido'.
+        'Ingrese el numero del turno'.
 
     numeroTexto ifNil: [ ^ self ].
     numero := numeroTexto asNumber.
@@ -1112,6 +1109,20 @@ VentanaPrincipal >> registrarAtencion [
         ^ self
     ].
 
+    presencia := UIManager default
+        chooseFrom: #('Presente' 'Ausente')
+        values: #('Presente' 'Ausente')
+        title: '¿El cliente está presente?'.
+
+    presencia ifNil: [ ^ self ].
+
+    presencia = 'Ausente'
+        ifTrue: [
+            turno estado: 'Ausente'.
+            UIManager default inform: 'Turno registrado como ausente'.
+            ^ self
+        ].
+
     turno estado: 'Atendido'.
 
     (turno isKindOf: TurnoTratamiento) ifTrue: [
@@ -1119,6 +1130,7 @@ VentanaPrincipal >> registrarAtencion [
     ].
 
     UIManager default inform: 'Atencion registrada correctamente'.
+
 
 ]
 
@@ -1425,7 +1437,6 @@ VentanaPrincipal >> solicitarTurno [
 				              veterinario: veterinario
 				              mascota: mascota
 				              tratamiento: tratamiento ].
-	UIManager default inform: (nuevoTurno verificarTurno: modelo turnos) asString.
 	exito := modelo agendarTurno: nuevoTurno.
 
 	exito

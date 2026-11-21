@@ -170,6 +170,34 @@ Veterinaria >> iniciarCuit: unCuit [
 	colTurnos := OrderedCollection new
 ]
 
+{ #category : #propio }
+Veterinaria >> mascotasConVacunasVencidas [
+
+    | resultado |
+    resultado := OrderedCollection new.
+
+    colCliente do: [ :unCliente |
+        unCliente mascotas do: [ :unaMascota |
+
+            ((unaMascota aplicaciones collect: [ :unaAplicacion |
+                unaAplicacion vacuna
+            ]) asSet) do: [ :unaVacuna |
+
+                | aplicacion |
+                aplicacion := unaMascota ultimaAplicacion: unaVacuna.
+
+                (aplicacion notNil and: [
+                    aplicacion estaVencida
+                ]) ifTrue: [
+                    resultado add: { unaMascota. unaVacuna }
+                ]
+            ]
+        ]
+    ].
+
+    ^ resultado
+]
+
 { #category : #visualizer }
 Veterinaria >> monodrogas [
 ^colMonodrogas 
