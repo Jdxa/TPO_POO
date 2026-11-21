@@ -9,7 +9,8 @@ Class {
 		'especie',
 		'raza',
 		'fechaNac',
-		'peso'
+		'peso',
+		'colAplicaciones'
 	],
 	#category : #'TPO-POO'
 }
@@ -28,6 +29,16 @@ Mascota class >> crearNombre: unNombre especie: unaEspecie raza: unaRaza fechaNa
 	^ unaMascota
 ]
 
+{ #category : #accesors }
+Mascota >> agregarAplicacion: unaAplicacion [
+	colAplicaciones add: unaAplicacion 
+]
+
+{ #category : #accesors }
+Mascota >> aplicaciones [ 
+^colAplicaciones 
+]
+
 { #category : #iniciador }
 Mascota >> iniciarNombre: unNombreMascota especie: unaEspecie raza: unaRaza fechaNac: unaFechaNac peso: unPeso [
 
@@ -35,7 +46,9 @@ Mascota >> iniciarNombre: unNombreMascota especie: unaEspecie raza: unaRaza fech
 	especie := unaEspecie.
 	raza := unaRaza.
 	fechaNac := unaFechaNac.
-	peso := unPeso
+	peso := unPeso.
+	colAplicaciones := OrderedCollection new.
+	
 ]
 
 { #category : #visualizer }

@@ -88,11 +88,11 @@ VentanaPrincipal >> agregarBotones [
 
 	self
 		agregarBoton: 'Historial Clinico'
-		accion: #consultarHistorial
+		accion: #consultarHistorialClinico 
 		posicion: 30 @ 300.
 	self
 		agregarBoton: 'Trats. por veterinario'
-		accion: #consultarTratamientosVeterinario 
+		accion: #consultarTratamientosVeterinario
 		posicion: 230 @ 300.
 
 	self
@@ -519,55 +519,48 @@ VentanaPrincipal >> cargarMonodrogasPrueba [
 
 { #category : #test }
 VentanaPrincipal >> cargarVacunasPrueba [
-    | vacunaPerro vacunaGato vet1 vet2
-      cliente2 cliente3 mascota21 mascota22 mascota31 |
 
-    vet1 := modelo veterinarios at: 1.
-    vet2 := modelo veterinarios at: 2.
+	| vacunaPerro vacunaGato vet1 vet2 cliente2 cliente3 mascota21 mascota22 mascota31 |
+	vet1 := modelo veterinarios at: 1.
+	vet2 := modelo veterinarios at: 2.
 
-    cliente2 := modelo buscarClientePorDni: '32444555'.
-    cliente3 := modelo buscarClientePorDni: '29888777'.
+	cliente2 := modelo buscarClientePorDni: '32444555'.
+	cliente3 := modelo buscarClientePorDni: '29888777'.
 
-    mascota21 := cliente2 mascotas at: 1.
-    mascota22 := cliente2 mascotas at: 2.
-    mascota31 := cliente3 mascotas at: 1.
+	mascota21 := cliente2 mascotas at: 1.
+	mascota22 := cliente2 mascotas at: 2.
+	mascota31 := cliente3 mascotas at: 1.
 
-    vacunaPerro := Vacuna
-        crearNombreVac: 'Antirrabica'
-        laboratorio: 'LabVet'
-        especie: 'Perro'
-        vigencia: 365.
+	vacunaPerro := Vacuna
+		               crearNombreVac: 'Antirrabica'
+		               laboratorio: 'LabVet'
+		               especie: 'Perro'
+		               vigencia: 365.
 
-    vacunaGato := Vacuna
-        crearNombreVac: 'Triple Felina'
-        laboratorio: 'VetLab'
-        especie: 'Gato'
-        vigencia: 365.
+	vacunaGato := Vacuna
+		              crearNombreVac: 'Triple Felina'
+		              laboratorio: 'VetLab'
+		              especie: 'Gato'
+		              vigencia: 365.
 
-    "MASCOTA 2.1: 1 APLICACION"
-    modelo agregarAplicacion: (Aplicacion
-        crearFecha: (Date year: 2026 month: 1 day: 10)
-        mascota: mascota21
-        veterinario: vet1
-        vacuna: vacunaGato).
+	mascota21 agregarAplicacion: (Aplicacion
+			 crearFecha: (Date year: 2026 month: 1 day: 10)
+			 veterinario: vet1
+			 vacuna: vacunaGato).
 
-    "MASCOTA 2.2: 2 APLICACIONES"
-    1 to: 2 do: [ :i |
-        modelo agregarAplicacion: (Aplicacion
-            crearFecha: (Date year: 2026 month: 2 day: i * 5)
-            mascota: mascota22
-            veterinario: vet2
-            vacuna: vacunaPerro)
-    ].
+mascota22 agregarAplicacion: (Aplicacion
+				 crearFecha: (Date year: 2026 month: 2 day:5)
+				 veterinario: vet2
+				 vacuna: vacunaPerro).
 
-    "MASCOTA 3.1: 3 APLICACIONES"
-    1 to: 3 do: [ :i |
-        modelo agregarAplicacion: (Aplicacion
-            crearFecha: (Date year: 2026 month: 3 day: i * 5)
-            mascota: mascota31
-            veterinario: vet1
-            vacuna: vacunaPerro)
-    ].
+	mascota31 agregarAplicacion: (Aplicacion
+			 crearFecha: (Date year: 2026 month: 3 day: 5)
+			 veterinario: vet1
+			 vacuna: vacunaPerro).
+	mascota31 agregarAplicacion: (Aplicacion
+			 crearFecha: (Date year: 2024 month: 3 day: 5)
+			 veterinario: vet1
+			 vacuna: vacunaPerro)
 ]
 
 { #category : #initialize }
@@ -656,6 +649,56 @@ VentanaPrincipal >> consultarFacturas [
 VentanaPrincipal >> consultarHistorial [
 
 	UIManager default inform: 'Historial consultado'
+]
+
+{ #category : #consultas }
+VentanaPrincipal >> consultarHistorialClinico [
+
+    | dni cliente texto |
+
+    dni := UIManager default request: 'Ingrese el DNI del cliente'.
+    dni ifNil: [ ^ self ].
+
+    cliente := modelo buscarClientePorDni: dni.
+
+    cliente ifNil: [
+        UIManager default inform: 'No existe ese cliente'.
+        ^ self
+    ].
+
+    texto := String streamContents: [ :stream |
+        cliente mascotas do: [ :unaMascota |
+            stream
+                nextPutAll: 'MASCOTA: ';
+                nextPutAll: unaMascota nombreMascota;
+                cr;
+                nextPutAll: 'Historial clinico';
+                cr.
+
+            (modelo historialClinicoDe: unaMascota) first do: [ :unDiagnostico |
+                stream
+                    nextPutAll: 'Diagnostico: ';
+                    nextPutAll: unDiagnostico descripcion;
+                    cr.
+                unDiagnostico tratamientos do: [ :unTratamiento |
+                    stream
+                        nextPutAll: '  Tratamiento: ';
+                        nextPutAll: unTratamiento motivo;
+                        cr
+                ]
+            ].
+
+            (modelo historialClinicoDe: unaMascota) second do: [ :unaAplicacion |
+                stream
+                    nextPutAll: 'Vacuna: ';
+                    nextPutAll: unaAplicacion vacuna nombreVacuna;
+                    cr
+            ].
+            stream cr
+        ]
+    ].
+
+    UIManager default inform: texto.
 ]
 
 { #category : #consultas }

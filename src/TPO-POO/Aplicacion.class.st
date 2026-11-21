@@ -10,7 +10,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'fecha',
-		'mascota',
 		'veterinario',
 		'vacuna'
 	],
@@ -25,22 +24,29 @@ unaAplicacion iniciarFecha: unaFecha mascota: unaMascota veterinario: unVeterina
 ^unaAplicacion  
 ]
 
+{ #category : #constructor }
+Aplicacion class >> crearFecha: unaFecha veterinario: unVeterinario vacuna: unaVacuna [
+
+	| unaAplicacion |
+	unaAplicacion := self new.
+	unaAplicacion
+		iniciarFecha: unaFecha
+		veterinario: unVeterinario
+		vacuna: unaVacuna.
+	^ unaAplicacion
+]
+
 { #category : #visualizer }
 Aplicacion >> fecha [
 ^fecha 
 ]
 
 { #category : #iniciador }
-Aplicacion >> iniciarFecha: unaFecha mascota: unaMascota veterinario: unVeterinario vacuna: unaVacuna [
-fecha := unaFecha.
-mascota := unaMascota .
-veterinario := unVeterinario .
-vacuna := unaVacuna  
-]
+Aplicacion >> iniciarFecha: unaFecha veterinario: unVeterinario vacuna: unaVacuna [
 
-{ #category : #visualizer }
-Aplicacion >> mascota [
-^mascota 
+	fecha := unaFecha.
+	veterinario := unVeterinario.
+	vacuna := unaVacuna
 ]
 
 { #category : #visualizer }

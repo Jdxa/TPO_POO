@@ -44,3 +44,8 @@ Vacuna >> iniciarNombreVac: unNombreVacuna laboratorio: unLaboratorio especie: u
 
 	
 ]
+
+{ #category : #accesing }
+Vacuna >> nombreVacuna [
+^nombreVacuna 
+]

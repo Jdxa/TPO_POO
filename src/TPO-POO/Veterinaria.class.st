@@ -19,7 +19,6 @@ Class {
 		'colDiagnostico',
 		'colFacturas',
 		'colMonodrogas',
-		'colAplicaciones',
 		'colTurnos'
 	],
 	#category : #'TPO-POO'
@@ -41,11 +40,6 @@ Veterinaria >> agendarTurno: unTurno [
 	exito := unTurno verificarTurno: colTurnos.
 	exito ifTrue: [ colTurnos add: unTurno ].
 	^ exito
-]
-
-{ #category : #propio }
-Veterinaria >> agregarAplicacion: unaAplicacion [
-colAplicaciones add: unaAplicacion.
 ]
 
 { #category : #propio }
@@ -72,11 +66,6 @@ Veterinaria >> agregarMonodroga: unaMonodroga [
 { #category : #propio }
 Veterinaria >> agregarVeterinario: unVeterinario [
 	colVeterinario add: unVeterinario.
-]
-
-{ #category : #visualizer }
-Veterinaria >> aplicaciones [
-^colAplicaciones 
 ]
 
 { #category : #visualizer }
@@ -160,17 +149,25 @@ listaFaltantes := colMonodrogas reject: [ :monodroga | monodroga tieneStock ].
 ^listaFaltantes  
 ]
 
+{ #category : #propio }
+Veterinaria >> historialClinicoDe: unaMascota [
+
+    ^ {
+        self diagnosticosDe: unaMascota.
+        unaMascota aplicaciones
+    }
+]
+
 { #category : #iniciador }
 Veterinaria >> iniciarCuit: unCuit [
-cuit := unCuit.
-colVeterinario := OrderedCollection new.
-colCliente := OrderedCollection new.
-colDiagnostico := OrderedCollection new.
-colFacturas := OrderedCollection new.
-colMonodrogas := OrderedCollection new.
-colAplicaciones := OrderedCollection new.
-colTurnos := OrderedCollection new.
 
+	cuit := unCuit.
+	colVeterinario := OrderedCollection new.
+	colCliente := OrderedCollection new.
+	colDiagnostico := OrderedCollection new.
+	colFacturas := OrderedCollection new.
+	colMonodrogas := OrderedCollection new.
+	colTurnos := OrderedCollection new
 ]
 
 { #category : #visualizer }
